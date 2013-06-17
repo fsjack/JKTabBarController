@@ -5,17 +5,23 @@
 //  Created by Jackie CHEUNG on 13-6-7.
 //  Copyright (c) 2013年 Weico. All rights reserved.
 //
-
+#import <QuartzCore/QuartzCore.h>
 #import "JKTabBarItem.h"
 #import "JKTabBarItem+Private.h"
-#import <QuartzCore/QuartzCore.h>
+#import "JKAppearanceProxy.h"
+
 static CGFloat const JKTabBarButtonImageVerticalOffset = 5.0f;
-static CGFloat const JKTabBarBadgeViewPopAnimationDuration = 0.6f;
+
+static CGFloat const JKTabBarBadgeViewPopAnimationDuration = 0.4f;
+static CGFloat const JKTabBarBadgeViewFadeAnimationDuration = 0.2f;
+
+static UIOffset const JKTabBarBadgeViewDefaultCenterOffset = (UIOffset){ 15.0f , 10.0f };
+static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 35.0f , 30.0f };
 
 @interface JKTabBarItem ()
 @property (nonatomic)  JKTabBarItemType itemType;
-@property (nonatomic, strong)  UIView      *contentView;
-@property (nonatomic, strong)  UIButton    *contentButton;
+@property (nonatomic, strong)  UIView      *itemView;
+@property (nonatomic, strong)  UIButton    *itemButton;
 @property (nonatomic, strong)  UIButton    *badgeButton;
 @end
 
@@ -24,8 +30,7 @@ static CGFloat const JKTabBarBadgeViewPopAnimationDuration = 0.6f;
 
 @implementation JKTabBarButton
 - (void)setHighlighted:(BOOL)highlighted{
-    //To stop button show UIControlStateHighlight state
-    [super setHighlighted:NO];
+    [super setHighlighted:NO]; //To stop button from showing UIControlStateHighlight state
 }
 
 - (void)setSelected:(BOOL)selected{
@@ -63,8 +68,91 @@ static CGFloat const JKTabBarBadgeViewPopAnimationDuration = 0.6f;
 @end
 
 @implementation JKTabBarItem
-#pragma mark - private methods
-- (void)_configureDefault{
+#pragma mark - appearence
++ (instancetype)appearance{
+    return [JKAppearanceProxy appearanceForClass:self];
+}
+
+#pragma mark - property
+- (UIView *)contentView{
+    if(self.itemType == JKTabBarItemTypeButton)
+        return self.itemButton;
+    else
+        return self.itemView;
+}
+
+- (UIImage *)finishedSelectedImage{
+    return [self.itemButton imageForState:UIControlStateSelected];
+}
+
+- (UIImage *)finishedUnselectedImage{
+    return [self.itemButton imageForState:UIControlStateDisabled];
+}
+
+- (UIEdgeInsets)imageInsets{
+    return self.itemButton.imageEdgeInsets;
+}
+
+- (void)setImageInsets:(UIEdgeInsets)imageInsets{
+    [self.itemButton setImageEdgeInsets:imageInsets];
+}
+
+- (NSInteger)tag{
+    return self.contentView.tag;
+}
+
+- (void)setTag:(NSInteger)tag{
+    [self.contentView setTag:tag];
+}
+
+- (void)setEnabled:(BOOL)enabled{
+    [self.itemButton setEnabled:enabled];
+}
+
+- (BOOL)isEnabled{
+    return self.itemButton.isEnabled;
+}
+
+- (NSString *)title{
+    return [self.itemButton titleForState:UIControlStateNormal];
+}
+
+- (void)setTitle:(NSString *)title{
+    [self.itemButton setTitle:title forState:UIControlStateNormal];
+}
+
+- (UIImage *)image{
+    return [self.itemButton imageForState:UIControlStateNormal];
+}
+
+- (void)setImage:(UIImage *)image{
+    [self.itemButton setImage:image forState:UIControlStateNormal];
+}
+
+- (void)setTitlePositionAdjustment:(UIOffset)adjustment{
+    [self.itemButton setTitleEdgeInsets:UIEdgeInsetsMake(adjustment.vertical, adjustment.horizontal, -adjustment.vertical, -adjustment.horizontal)];
+}
+
+- (UIOffset)titlePositionAdjustment{
+    return UIOffsetMake(self.itemButton.titleEdgeInsets.left, self.itemButton.titleEdgeInsets.top);
+}
+
+- (void)setTitleTextAttributes:(NSDictionary *)attributes forState:(UIControlState)state{
+    /*!Need FIX: Need to compatiable with iOS 5 and iOS 7. */    
+    [self.itemButton.titleLabel setFont:attributes[UITextAttributeFont]];
+    [self.itemButton.titleLabel setShadowOffset:[attributes[UITextAttributeTextShadowOffset] CGSizeValue]];
+    [self.itemButton setTitleColor:attributes[UITextAttributeTextColor] forState:state];
+    [self.itemButton setTitleShadowColor:attributes[UITextAttributeTextShadowColor] forState:state];
+}
+
+- (NSDictionary *)titleTextAttributesForState:(UIControlState)state{
+    /*!Need FIX: Need to compatiable with iOS 5 and iOS 7. */    
+    return @{
+             UITextAttributeFont                : self.itemButton.titleLabel.font,
+             UITextAttributeTextShadowOffset    : [NSValue valueWithCGSize:self.itemButton.titleLabel.shadowOffset],
+             UITextAttributeTextColor           : [self.itemButton titleColorForState:state],
+             UITextAttributeTextShadowColor     : [self.itemButton titleShadowColorForState:state]
+             };
 }
 
 #pragma mark - initialziation
@@ -74,7 +162,7 @@ static CGFloat const JKTabBarBadgeViewPopAnimationDuration = 0.6f;
         _itemType = JKTabBarItemTypeButton;
         
         JKTabBarButton *button = [JKTabBarButton buttonWithType:UIButtonTypeCustom];
-        _contentButton = button;
+        _itemButton = button;
         [button setTitle:title forState:UIControlStateNormal];
         [button setImage:image forState:UIControlStateNormal];
         [button setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
@@ -83,10 +171,8 @@ static CGFloat const JKTabBarBadgeViewPopAnimationDuration = 0.6f;
         [button setAdjustsImageWhenDisabled:NO];
         
         [button.titleLabel setFont:[UIFont boldSystemFontOfSize:10]];
-        [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected|UIControlStateDisabled];
-        
-        [self _configureDefault];
     }
     return self;
 }
@@ -95,95 +181,23 @@ static CGFloat const JKTabBarBadgeViewPopAnimationDuration = 0.6f;
     self = [super init];
     if(self){
         _itemType = JKTabBarItemTypeCustomView;
-        _contentView = customView;
-        [self _configureDefault];
+        _itemView = customView;
     }
     return self;
 }
 
 #pragma mark - public methods
 - (void)setFinishedSelectedImage:(UIImage *)selectedImage withFinishedUnselectedImage:(UIImage *)unselectedImage{
-    [self.contentButton setImage:selectedImage forState:UIControlStateSelected|UIControlStateDisabled];
-    [self.contentButton setImage:unselectedImage forState:UIControlStateNormal];
+    [self.itemButton setImage:selectedImage forState:UIControlStateSelected|UIControlStateDisabled];
+    [self.itemButton setImage:unselectedImage forState:UIControlStateNormal];
 }
 
-#pragma mark - property
-- (UIImage *)finishedSelectedImage{
-    return [self.contentButton imageForState:UIControlStateSelected];
+- (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents{
+    [self.itemButton addTarget:target action:action forControlEvents:controlEvents];
 }
 
-- (UIImage *)finishedUnselectedImage{
-    return [self.contentButton imageForState:UIControlStateDisabled];
-}
-
-- (UIEdgeInsets)imageInsets{
-    return self.contentButton.imageEdgeInsets;
-}
-
-- (void)setImageInsets:(UIEdgeInsets)imageInsets{
-    [self.contentButton setImageEdgeInsets:imageInsets];
-}
-
-- (NSInteger)tag{
-    if(self.contentButton)
-        return self.contentButton.tag;
-    else
-        return self.contentView.tag;
-}
-
-- (void)setTag:(NSInteger)tag{
-    [self.contentButton setTag:tag];
-    [self.contentView setTag:tag];
-}
-
-- (void)setEnabled:(BOOL)enabled{
-    [self.contentButton setEnabled:enabled];
-}
-
-- (BOOL)isEnabled{
-    return self.contentButton.isEnabled;
-}
-
-- (NSString *)title{
-    return [self.contentButton titleForState:UIControlStateNormal];
-}
-
-- (void)setTitle:(NSString *)title{
-    [self.contentButton setTitle:title forState:UIControlStateNormal];
-}
-
-- (UIImage *)image{
-    return [self.contentButton imageForState:UIControlStateNormal];
-}
-
-- (void)setImage:(UIImage *)image{
-    [self.contentButton setImage:image forState:UIControlStateNormal];
-}
-
-- (void)setTitlePositionAdjustment:(UIOffset)adjustment{
-}
-
-- (UIOffset)titlePositionAdjustment{
-    return UIOffsetZero;
-}
-
-
-#pragma mark - badge
-- (UIButton *)badgeButton{
-    if(!_badgeButton){
-        _badgeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _badgeButton.enabled = NO;
-    }
-    return _badgeButton;
-}
-
-- (void)setBadgeValue:(NSString *)badgeValue{
-    [self.badgeButton setTitle:badgeValue forState:UIControlStateNormal];
-    [self.badgeButton.layer addAnimation:[self popAnimation] forKey:@"Pop"];
-}
-
-- (NSString *)badgeValue{
-    return [self.badgeButton titleForState:UIControlStateNormal];
+- (void)removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents{
+    [self.itemButton removeTarget:target action:action forControlEvents:controlEvents];
 }
 
 #pragma mark - animation
@@ -205,6 +219,91 @@ static CGFloat const JKTabBarBadgeViewPopAnimationDuration = 0.6f;
     animationgroup.duration = JKTabBarBadgeViewPopAnimationDuration;
     
     return animationgroup;
+}
+
+#pragma mark - badge
+- (CGSize)badgeSize{
+    /*!Need FIX : badge Size is not correct by now */
+    return JKTabBarBadgeViewMinmumSize;
+}
+
+- (UIButton *)badgeButton{
+    if(!_badgeButton){
+        _badgeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_badgeButton.titleLabel setFont:[UIFont systemFontOfSize:10]];
+        _badgeButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
+        [_badgeButton setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [_badgeButton setAdjustsImageWhenDisabled:NO];
+        [_badgeButton setEnabled:NO];
+        
+        /*!Need FIX: badge frame is not settle */
+        _badgeButton.frame = (CGRect){
+            CGRectGetMidX(self.contentView.bounds) - self.badgeSize.width/2 + JKTabBarBadgeViewDefaultCenterOffset.horizontal ,
+            CGRectGetMidY(self.contentView.bounds) - self.badgeSize.height/2 - JKTabBarBadgeViewDefaultCenterOffset.vertical ,
+            self.badgeSize
+        };
+        
+        _badgeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    }
+    return _badgeButton;
+}
+
+- (NSString *)badgeValue{
+    return [self.badgeButton titleForState:UIControlStateNormal];
+}
+
+static NSString * const JKTabBarItemBadgePopAnimationKey = @"JKTabBarItemBadgePopAnimationKey";
+
+- (void)setBadgeValue:(NSString *)badgeValue{
+    [self setBadgeValue:badgeValue animated:NO];
+}
+
+- (void)setBadgeValue:(NSString *)badgeValue animated:(BOOL)animated;{
+    if(badgeValue.length){
+        [self.badgeButton setTitle:badgeValue forState:UIControlStateNormal];
+        [self.badgeButton sizeToFit];
+        
+        [self.contentView addSubview:self.badgeButton];
+        if(![self.badgeButton.layer animationForKey:JKTabBarItemBadgePopAnimationKey] && animated)
+            [self.badgeButton.layer addAnimation:[self popAnimation] forKey:JKTabBarItemBadgePopAnimationKey];
+    }else{
+        [UIView animateWithDuration:(animated ? JKTabBarBadgeViewFadeAnimationDuration : 0.0f)
+                              delay:0.0f
+                            options:UIViewAnimationOptionCurveEaseInOut | UIViewKeyframeAnimationOptionBeginFromCurrentState
+                         animations:^{
+                             self.badgeButton.alpha = 0.0f;
+                         } completion:^(BOOL finished) {
+                             [self.badgeButton removeFromSuperview];
+                             [self.badgeButton.layer removeAnimationForKey:JKTabBarItemBadgePopAnimationKey];
+                         }];
+    }
+}
+
+#pragma mark - badge property 
+- (void)setBadgeTextAttributeds:(NSDictionary *)badgeTextAttributeds{
+    /*!Need FIX: Need to compatiable with iOS 5 and iOS 7. */
+    [self.badgeButton setTitleColor:badgeTextAttributeds[UITextAttributeTextColor] forState:UIControlStateNormal];
+    [self.badgeButton setTitleShadowColor:badgeTextAttributeds[UITextAttributeTextShadowColor] forState:UIControlStateNormal];
+    [self.badgeButton.titleLabel setFont:badgeTextAttributeds[UITextAttributeFont]];
+    [self.badgeButton.titleLabel setShadowOffset:[badgeTextAttributeds[UITextAttributeTextShadowOffset] CGSizeValue]];
+}
+
+- (NSDictionary *)badgeTextAttributeds{
+    /*!Need FIX: Need to compatiable with iOS 5 and iOS 7. */    
+    return @{
+             UITextAttributeTextColor          : [self.badgeButton titleColorForState:UIControlStateNormal],
+             UITextAttributeTextShadowColor    : [self.badgeButton titleShadowColorForState:UIControlStateNormal],
+             UITextAttributeFont               : self.badgeButton.titleLabel.font,
+             UITextAttributeTextShadowOffset   : [NSValue valueWithCGSize:self.badgeButton.titleLabel.shadowOffset]
+             };
+}
+
+- (UIImage *)badgeBackgroundImage{
+    return [self.badgeButton backgroundImageForState:UIControlStateNormal];
+}
+
+- (void)setBadgeBackgroundImage:(UIImage *)badgeBackgroundImage{
+    [self.badgeButton setBackgroundImage:badgeBackgroundImage forState:UIControlStateNormal];
 }
 
 @end

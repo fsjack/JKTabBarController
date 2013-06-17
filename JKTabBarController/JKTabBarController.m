@@ -149,7 +149,7 @@ static NSUInteger const JKTabBarMaximumItemCount = 5;
 
 - (JKTabBarItem *)moreTabBarItem{
     if(!_moreTabBarItem){
-        JKTabBarItem *item = [[JKTabBarItem alloc] initWithTitle:NSLocalizedString(@"More", @"") image:nil];
+        JKTabBarItem *item = [self _tabBarItemsForViewController:self.moreNavigationController];
         _moreTabBarItem = item;
     }
     return _moreTabBarItem;
@@ -183,8 +183,6 @@ static NSUInteger const JKTabBarMaximumItemCount = 5;
     _viewControllers = [viewControllers copy];
     
     NSMutableArray *items = [NSMutableArray array];
-    
-    __weak __typeof(&*self)weakSelf = self;
     [viewControllers enumerateObjectsUsingBlock:^(UIViewController *viewController, NSUInteger idx, BOOL *stop) {
         UIViewController *rootViewController = viewController;
         if([viewController isKindOfClass:[UINavigationController class]]){
@@ -192,12 +190,12 @@ static NSUInteger const JKTabBarMaximumItemCount = 5;
             rootViewController = (navigationController.viewControllers.count ? navigationController.viewControllers[0] : rootViewController);
         }
         
-        if(idx == JKTabBarMaximumItemCount-1 && weakSelf.shouldShowMore){
+        if(idx == JKTabBarMaximumItemCount-1 && self.shouldShowMore){
             /* add 'more' tab bar item if index is out of maximum count */
             *stop = YES;
-            [items addObject:weakSelf.moreTabBarItem];
+            [items addObject:self.moreTabBarItem];
         }else
-            [items addObject:[weakSelf _tabBarItemsForViewController:rootViewController]];
+            [items addObject:[self _tabBarItemsForViewController:rootViewController]];
     }];
     self.tabBar.items = items;
 }

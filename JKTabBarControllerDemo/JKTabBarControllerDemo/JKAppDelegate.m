@@ -40,6 +40,7 @@
     purpleViewController.tabBarItem_jk = [[JKTabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"home_tab_icon_5"]];
     purpleViewController.view.backgroundColor = [UIColor purpleColor];
     
+    
     [tabBarController setViewControllers:@[
                                            [[UINavigationController alloc] initWithRootViewController:redViewController],
                                            [[UINavigationController alloc] initWithRootViewController:blueViewController],
@@ -57,6 +58,13 @@
     
     [[JKTabBar appearance] setBackgroundImage:[UIImage imageNamed:@"mask_navbar"]];
     [[JKTabBar appearance] setSelectionIndicatorImage:[UIImage imageNamed:@"home_bottom_tab_arrow"]];
+    [[JKTabBarItem appearance] setBadgeBackgroundImage:[[UIImage imageNamed:@"number_notify_9"] stretchableImageWithLeftCapWidth:15 topCapHeight:10]];
+    
+    double delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [redViewController.tabBarItem_jk setBadgeValue:@"test" animated:YES];
+    });
     
     return YES;
 }

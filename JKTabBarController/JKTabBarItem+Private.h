@@ -13,7 +13,11 @@ typedef NS_ENUM(NSUInteger, JKTabBarItemType) {
 };
 
 @interface JKTabBarItem (Private)
-@property (nonatomic, readonly)  JKTabBarItemType itemType;
-@property (nonatomic, strong, readonly)  UIView      *contentView;
-@property (nonatomic, strong, readonly)  UIButton    *contentButton;
+@property (nonatomic, readonly) JKTabBarItemType   itemType;
+@property (nonatomic, readonly) UIView             *contentView;
+
+//methods below wont efficent if itemType is JKTabBarItemTypeCustomView
+- (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
+- (void)removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
+
 @end

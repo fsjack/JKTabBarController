@@ -44,6 +44,7 @@
 		8C33F668176CE4B100E1AEC7 /* number_notify_9.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C33F666176CE4B100E1AEC7 /* number_notify_9.png */; };
 		8C33F669176CE4B100E1AEC7 /* number_notify_9@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C33F667176CE4B100E1AEC7 /* number_notify_9@2x.png */; };
 		8C33F66B176CE6F100E1AEC7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8C33F66A176CE6F100E1AEC7 /* README.md */; };
+		8CBD61EE176EEE4100FE7920 /* JKAppearanceProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBD61ED176EEE4100FE7920 /* JKAppearanceProxy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +106,8 @@
 		8C33F666176CE4B100E1AEC7 /* number_notify_9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = number_notify_9.png; sourceTree = "<group>"; };
 		8C33F667176CE4B100E1AEC7 /* number_notify_9@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "number_notify_9@2x.png"; sourceTree = "<group>"; };
 		8C33F66A176CE6F100E1AEC7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		8CBD61EC176EEE4100FE7920 /* JKAppearanceProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKAppearanceProxy.h; sourceTree = "<group>"; };
+		8CBD61ED176EEE4100FE7920 /* JKAppearanceProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKAppearanceProxy.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,6 +226,8 @@
 				8C2A189917618DBD0094525A /* JKTabBarItem.m */,
 				8C33F646176CC9B600E1AEC7 /* JKTabBar+Orientation.h */,
 				8C33F647176CD68300E1AEC7 /* JKTabBarItem+Private.h */,
+				8CBD61EC176EEE4100FE7920 /* JKAppearanceProxy.h */,
+				8CBD61ED176EEE4100FE7920 /* JKAppearanceProxy.m */,
 			);
 			name = JKTabBarController;
 			path = ../../JKTabBarController;
@@ -384,6 +389,7 @@
 				8C2A187017618D4E0094525A /* JKViewController.m in Sources */,
 				8C2A189417618D8F0094525A /* JKTabBarController.m in Sources */,
 				8C2A189717618DA30094525A /* JKTabBar.m in Sources */,
+				8CBD61EE176EEE4100FE7920 /* JKAppearanceProxy.m in Sources */,
 				8C2A189A17618DBD0094525A /* JKTabBarItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

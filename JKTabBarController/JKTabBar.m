@@ -10,6 +10,7 @@
 #import "JKTabBarItem.h"
 #import "JKTabBar+Orientation.h"
 #import "JKTabBarItem+Private.h"
+#import "JKAppearanceProxy.h"
 
 static NSUInteger const JKTabBarItemDefaultSelectedIndex = 0;
 
@@ -86,22 +87,15 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
 
 - (void)_setupTabBarItems{
     [self.items enumerateObjectsUsingBlock:^(JKTabBarItem *itemButton, NSUInteger idx, BOOL *stop) {
-        [itemButton.contentButton removeFromSuperview];
         [itemButton.contentView removeFromSuperview];
     }];
     
     __weak __typeof(&*self)weakSelf = self;
     [self.items enumerateObjectsUsingBlock:^(JKTabBarItem *item, NSUInteger idx, BOOL *stop) {
-        if(item.itemType == JKTabBarItemTypeButton){
-            item.contentButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-            [item.contentButton addTarget:self action:@selector(_selecteButtonItem:) forControlEvents:UIControlEventTouchDown];
-            [weakSelf addSubview:item.contentButton];
-            
-            if(JKTabBarItemDefaultSelectedIndex == idx) [weakSelf _selecteButtonItem:item.contentButton];
-        }else{
-            item.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-            [weakSelf addSubview:item.contentView];
-        }
+        item.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [item addTarget:self action:@selector(_selecteButtonItem:) forControlEvents:UIControlEventTouchDown];
+        [weakSelf addSubview:item.contentView];
+        if(JKTabBarItemDefaultSelectedIndex == idx) [weakSelf _selecteButtonItem:item.contentView];
         item.tag = idx;
     }];
 }
@@ -113,11 +107,12 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
 }
 
 #pragma mark - Action
-- (void)_selecteButtonItem:(UIButton *)button{
+- (void)_selecteButtonItem:(id)sender{
+    UIButton *button = sender;
     JKTabBarItem *item = [self tabBarItemForItemButton:button];
     if(item == self.selectedItem) return;
     
-    UIButton *selectedButton = self.selectedItem.contentButton;
+    UIButton *selectedButton = (UIButton *)self.selectedItem.contentView;
     
     [button setSelected:!button.isSelected];
     [selectedButton setSelected:!selectedButton.isSelected];
@@ -207,25 +202,24 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     CGFloat __block itemButtonOffsetX = JKTabBarButtonItemLeftMargin;
     __weak __typeof(&*self)weakSelf = self;
     [self.items enumerateObjectsUsingBlock:^(JKTabBarItem *item, NSUInteger idx, BOOL *stop) {
+        UIView *itemContentView = item.contentView;
         if(item.itemType == JKTabBarItemTypeButton){
-            UIButton *itemButton = item.contentButton;
             
-            itemButton.frame = rotateFrame((CGRect){ itemButtonOffsetX , JKTabBarButtonItemTopMargin , itemButtonSize },weakSelf.orientation);
+            itemContentView.frame = rotateFrame((CGRect){ itemButtonOffsetX , JKTabBarButtonItemTopMargin , itemButtonSize },weakSelf.orientation);
             
             CGFloat offsetLength = (weakSelf.orientation == JKTabBarOrientationHorizontal ? itemButtonSize.width : itemButtonSize.height);
             itemButtonOffsetX += (offsetLength + JKTabBarButtonItemPadding);
             
         }else if(item.itemType == JKTabBarItemTypeCustomView){
-            UIView *contentView = item.contentView;
-            contentView.frame = rotateFrame((CGRect){ itemButtonOffsetX , JKTabBarButtonItemTopMargin , contentView.bounds.size },weakSelf.orientation);
+            itemContentView.frame = rotateFrame((CGRect){ itemButtonOffsetX , JKTabBarButtonItemTopMargin , itemContentView.bounds.size },weakSelf.orientation);
             
-            CGFloat offsetLength = (weakSelf.orientation == JKTabBarOrientationHorizontal ? contentView.bounds.size.width : contentView.bounds.size.height);
+            CGFloat offsetLength = (weakSelf.orientation == JKTabBarOrientationHorizontal ? itemContentView.bounds.size.width : itemContentView.bounds.size.height);
             itemButtonOffsetX += (offsetLength + JKTabBarButtonItemPadding);
         }
     }];
     
     //set selection indictor image frame
-    self.selectionIndicatorImageView.frame = self.selectedItem.contentButton.frame;
+    self.selectionIndicatorImageView.frame = self.selectedItem.contentView.frame;
 }
 
 #pragma mark - Uility
