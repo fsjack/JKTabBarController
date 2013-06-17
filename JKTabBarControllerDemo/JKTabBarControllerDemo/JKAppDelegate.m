@@ -52,18 +52,17 @@
      ] animated:YES];
     
     tabBarController.tabBar.selectionIndicatorAnimable = YES;
+    [[JKTabBar appearance] setBackgroundImage:[UIImage imageNamed:@"mask_navbar"]];
+    [[JKTabBar appearance] setSelectionIndicatorImage:[UIImage imageNamed:@"home_bottom_tab_arrow"]];
+    [[JKTabBarItem appearance] setBadgeBackgroundImage:[[UIImage imageNamed:@"number_notify_9"] stretchableImageWithLeftCapWidth:16 topCapHeight:16]];
     
     self.window.rootViewController = tabBarController;
     [self.window makeKeyAndVisible];
     
-    [[JKTabBar appearance] setBackgroundImage:[UIImage imageNamed:@"mask_navbar"]];
-    [[JKTabBar appearance] setSelectionIndicatorImage:[UIImage imageNamed:@"home_bottom_tab_arrow"]];
-    [[JKTabBarItem appearance] setBadgeBackgroundImage:[[UIImage imageNamed:@"number_notify_9"] stretchableImageWithLeftCapWidth:15 topCapHeight:10]];
-    
     double delayInSeconds = 2.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [redViewController.tabBarItem_jk setBadgeValue:@"test" animated:YES];
+        [redViewController.tabBarItem_jk setBadgeValue:@"0" animated:YES];
     });
     
     return YES;

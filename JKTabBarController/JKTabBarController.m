@@ -186,33 +186,33 @@ static NSUInteger const JKTabBarMaximumItemCount = 5;
     [viewControllers enumerateObjectsUsingBlock:^(UIViewController *viewController, NSUInteger idx, BOOL *stop) {
         UIViewController *rootViewController = viewController;
         if([viewController isKindOfClass:[UINavigationController class]]){
+            /* navigation controller is ignore by default and seek for the root view controller */
             UINavigationController *navigationController = (UINavigationController *)viewController;
             rootViewController = (navigationController.viewControllers.count ? navigationController.viewControllers[0] : rootViewController);
         }
         
+        JKTabBarItem *item;
         if(idx == JKTabBarMaximumItemCount-1 && self.shouldShowMore){
             /* add 'more' tab bar item if index is out of maximum count */
             *stop = YES;
-            [items addObject:self.moreTabBarItem];
-        }else
-            [items addObject:[self _tabBarItemsForViewController:rootViewController]];
+            item = self.moreTabBarItem;
+        }else{
+            item = [self _tabBarItemsForViewController:rootViewController];
+        }
+        [items addObject:item];
+        
+        if([self.delegate respondsToSelector:@selector(tabBarController:shouldSelectViewController:)]){
+            item.enabled = [self.delegate tabBarController:self shouldSelectViewController:rootViewController];
+        }
     }];
     self.tabBar.items = items;
 }
 
 #pragma mark - JKTabBarDelegate
 - (void)tabBar:(JKTabBar *)tabBar didSelectItem:(JKTabBarItem *)item{
-    UIViewController *viewController = [self _viewControllerForTabBarItem:item];
-    
-    BOOL shouldSelectViewController = YES;
-    if([self.delegate respondsToSelector:@selector(tabBarController:shouldSelectViewController:)])
-        shouldSelectViewController = [self.delegate tabBarController:self shouldSelectViewController:viewController];
-    
-    if(shouldSelectViewController){
-        [self _selectTabBarItem:item];
-        if([self.delegate respondsToSelector:@selector(tabBarController:didSelectViewController:)])
-            [self.delegate tabBarController:self didSelectViewController:viewController];
-    }
+    [self _selectTabBarItem:item];
+    if([self.delegate respondsToSelector:@selector(tabBarController:didSelectViewController:)])
+        [self.delegate tabBarController:self didSelectViewController:[self _viewControllerForTabBarItem:item]];
 }
 
 - (void)tabBar:(JKTabBar *)tabBar willBeginCustomizingItems:(NSArray *)items{

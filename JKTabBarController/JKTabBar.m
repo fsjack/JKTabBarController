@@ -204,7 +204,6 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     [self.items enumerateObjectsUsingBlock:^(JKTabBarItem *item, NSUInteger idx, BOOL *stop) {
         UIView *itemContentView = item.contentView;
         if(item.itemType == JKTabBarItemTypeButton){
-            
             itemContentView.frame = rotateFrame((CGRect){ itemButtonOffsetX , JKTabBarButtonItemTopMargin , itemButtonSize },weakSelf.orientation);
             
             CGFloat offsetLength = (weakSelf.orientation == JKTabBarOrientationHorizontal ? itemButtonSize.width : itemButtonSize.height);

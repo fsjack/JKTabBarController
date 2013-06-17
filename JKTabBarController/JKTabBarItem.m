@@ -16,16 +16,18 @@ static CGFloat const JKTabBarBadgeViewPopAnimationDuration = 0.4f;
 static CGFloat const JKTabBarBadgeViewFadeAnimationDuration = 0.2f;
 
 static UIOffset const JKTabBarBadgeViewDefaultCenterOffset = (UIOffset){ 15.0f , 10.0f };
-static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 35.0f , 30.0f };
+static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 
 @interface JKTabBarItem ()
-@property (nonatomic)  JKTabBarItemType itemType;
+@property (nonatomic)  JKTabBarItemType     itemType;
 @property (nonatomic, strong)  UIView      *itemView;
 @property (nonatomic, strong)  UIButton    *itemButton;
+
 @property (nonatomic, strong)  UIButton    *badgeButton;
 @end
 
 @interface JKTabBarButton : UIButton
+@property (weak, nonatomic) JKTabBarItem *tabBarItem;
 @end
 
 @implementation JKTabBarButton
@@ -65,6 +67,14 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 35.0f , 30.0f };
     
     return titleRect;
 }
+
+#pragma mark - Appearence
+/* excute appearance recoraded invocation when button is moved to window. */
+- (void)didMoveToWindow{
+    [super didMoveToWindow];
+    [[JKAppearanceProxy appearanceForClass:[JKTabBarItem class]] startForwarding:self.tabBarItem];
+}
+
 @end
 
 @implementation JKTabBarItem
@@ -162,7 +172,8 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 35.0f , 30.0f };
         _itemType = JKTabBarItemTypeButton;
         
         JKTabBarButton *button = [JKTabBarButton buttonWithType:UIButtonTypeCustom];
-        _itemButton = button;
+        _itemButton         = button;
+        button.tabBarItem   = self;
         [button setTitle:title forState:UIControlStateNormal];
         [button setImage:image forState:UIControlStateNormal];
         [button setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
@@ -205,7 +216,7 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 35.0f , 30.0f };
     CAKeyframeAnimation *scaleAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
     scaleAnimation.values = @[
                               [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.2, 0.2, 1)],
-                              [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.05, 1.05, 1)],
+                              [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.2, 1.2, 1)],
                               [NSValue valueWithCATransform3D:CATransform3DMakeScale(1, 1, 1)]
                               ];
     scaleAnimation.keyTimes = @[ @(0.0f) , @(0.3f) , @(0.5f) ];
@@ -223,27 +234,28 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 35.0f , 30.0f };
 
 #pragma mark - badge
 - (CGSize)badgeSize{
-    /*!Need FIX : badge Size is not correct by now */
-    return JKTabBarBadgeViewMinmumSize;
+    [self.badgeButton sizeToFit];
+    CGSize badgeSize = self.badgeButton.bounds.size;
+    
+    if(CGRectGetWidth(self.badgeButton.bounds) < JKTabBarBadgeViewMinmumSize.width) badgeSize.width = JKTabBarBadgeViewMinmumSize.width;
+    if(CGRectGetHeight(self.badgeButton.bounds) < JKTabBarBadgeViewMinmumSize.height) badgeSize.height = JKTabBarBadgeViewMinmumSize.height;
+    
+    badgeSize.width     = badgeSize.width - self.badgeInsets.right;
+    badgeSize.height    = badgeSize.height - self.badgeInsets.bottom;
+    
+    return badgeSize;
 }
 
 - (UIButton *)badgeButton{
     if(!_badgeButton){
-        _badgeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_badgeButton.titleLabel setFont:[UIFont systemFontOfSize:10]];
-        _badgeButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
-        [_badgeButton setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-        [_badgeButton setAdjustsImageWhenDisabled:NO];
-        [_badgeButton setEnabled:NO];
+        UIButton *badgeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _badgeButton = badgeButton;
         
-        /*!Need FIX: badge frame is not settle */
-        _badgeButton.frame = (CGRect){
-            CGRectGetMidX(self.contentView.bounds) - self.badgeSize.width/2 + JKTabBarBadgeViewDefaultCenterOffset.horizontal ,
-            CGRectGetMidY(self.contentView.bounds) - self.badgeSize.height/2 - JKTabBarBadgeViewDefaultCenterOffset.vertical ,
-            self.badgeSize
-        };
-        
-        _badgeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        [badgeButton.titleLabel setFont:[UIFont systemFontOfSize:10]];
+        badgeButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
+        [badgeButton setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [badgeButton setAdjustsImageWhenDisabled:NO];
+        [badgeButton setEnabled:NO];
     }
     return _badgeButton;
 }
@@ -253,7 +265,6 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 35.0f , 30.0f };
 }
 
 static NSString * const JKTabBarItemBadgePopAnimationKey = @"JKTabBarItemBadgePopAnimationKey";
-
 - (void)setBadgeValue:(NSString *)badgeValue{
     [self setBadgeValue:badgeValue animated:NO];
 }
@@ -261,7 +272,13 @@ static NSString * const JKTabBarItemBadgePopAnimationKey = @"JKTabBarItemBadgePo
 - (void)setBadgeValue:(NSString *)badgeValue animated:(BOOL)animated;{
     if(badgeValue.length){
         [self.badgeButton setTitle:badgeValue forState:UIControlStateNormal];
-        [self.badgeButton sizeToFit];
+        
+        self.badgeButton.frame = (CGRect){
+            CGRectGetMidX(self.contentView.bounds) - self.badgeSize.width/2 + JKTabBarBadgeViewDefaultCenterOffset.horizontal + self.badgeInsets.left ,
+            CGRectGetMidY(self.contentView.bounds) - self.badgeSize.height/2 - JKTabBarBadgeViewDefaultCenterOffset.vertical + self.badgeInsets.top ,
+            self.badgeSize
+        };
+        self.badgeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         
         [self.contentView addSubview:self.badgeButton];
         if(![self.badgeButton.layer animationForKey:JKTabBarItemBadgePopAnimationKey] && animated)
@@ -269,7 +286,7 @@ static NSString * const JKTabBarItemBadgePopAnimationKey = @"JKTabBarItemBadgePo
     }else{
         [UIView animateWithDuration:(animated ? JKTabBarBadgeViewFadeAnimationDuration : 0.0f)
                               delay:0.0f
-                            options:UIViewAnimationOptionCurveEaseInOut | UIViewKeyframeAnimationOptionBeginFromCurrentState
+                            options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
                              self.badgeButton.alpha = 0.0f;
                          } completion:^(BOOL finished) {
