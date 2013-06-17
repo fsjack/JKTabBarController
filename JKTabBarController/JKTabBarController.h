@@ -26,8 +26,7 @@
  Feature of JKTabBarController
  * Custom tab bar item,you can put a view in tabBar if you like.
  * Custom tab bar position.Provide four option for choosing,you can put it on top bottom left or right.No support for middle yet:)
- * One may not count as feature but we waste time implementing this,which is customizeable view controller.You can customize the count of items to display in customizedViewController we provide or you write your own.
- * custom view controller transition,or you can use some transition we have writen.
+ * One may not count as feature but we waste time implementing this,which is customizeable view controller.You can customize the count of items to display in customizedViewController we provide or you write your own.x
  */
 
 typedef NS_ENUM(NSUInteger, JKTabBarPosition){
@@ -48,7 +47,7 @@ NS_INLINE BOOL JKTabBarIsHorizontal(JKTabBarPosition position) {
 @class JKTabBarItem;
 @protocol JKTabBarControllerDelegate;
 @interface JKTabBarController : UIViewController<JKTabBarDelegate>
-@property (nonatomic)       JKTabBarPosition    tabBarPosition;
+@property (nonatomic)       JKTabBarPosition    tabBarPosition UI_APPEARANCE_SELECTOR; //Defualt is JKTabBarPositionBottom.
 @property (nonatomic,copy)  NSArray             *viewControllers;
 // If the number of view controllers is greater than the number displayable by a tab bar, a "More" navigation controller will automatically be shown.
 // The "More" navigation controller will not be returned by -viewControllers, but it may be returned by -selectedViewController.

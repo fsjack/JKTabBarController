@@ -81,6 +81,7 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     //Set up selection indicator image ivew
     UIImageView *selectionIndicatorImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     self.selectionIndicatorImageView = selectionIndicatorImageView;
+    self.selectionIndicatorImageView.contentMode = UIViewContentModeCenter;    
     selectionIndicatorImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self addSubview:selectionIndicatorImageView];
 }

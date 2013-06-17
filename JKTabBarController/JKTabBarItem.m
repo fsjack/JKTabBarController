@@ -69,9 +69,9 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 }
 
 #pragma mark - Appearence
-/* excute appearance recoraded invocation when button is moved to window. */
 - (void)didMoveToWindow{
     [super didMoveToWindow];
+    /* excute appearance recoraded invocation when button is moved to window. */    
     [[JKAppearanceProxy appearanceForClass:[JKTabBarItem class]] startForwarding:self.tabBarItem];
 }
 
