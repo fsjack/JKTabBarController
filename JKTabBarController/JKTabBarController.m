@@ -9,10 +9,11 @@
 #import "JKTabBarController.h"
 #import "JKTabBarItem.h"
 #import "JKTabBar+Orientation.h"
+#import "_JKTabBarMoreViewController.h"
 #import <objc/runtime.h>
 
 static CGFloat const JKTabBarDefaultHeight = 50.0f;
-static NSUInteger const JKTabBarMaximumItemCount = 5;
+NSUInteger const JKTabBarMaximumItemCount = 5;
 
 @interface JKTabBarController (){
 @private
@@ -22,6 +23,7 @@ static NSUInteger const JKTabBarMaximumItemCount = 5;
 }
 @property (nonatomic,readonly) BOOL shouldShowMore;
 @property (nonatomic,strong) UINavigationController *moreNavigationController;
+@property (nonatomic,strong) _JKTabBarMoreViewController *moreViewController;
 @property (nonatomic,strong) JKTabBarItem           *moreTabBarItem;
 @property (nonatomic,weak)   UIView   *containerView;
 @property (nonatomic,weak)   JKTabBar *tabBar;
@@ -141,8 +143,11 @@ static NSUInteger const JKTabBarMaximumItemCount = 5;
 
 - (UINavigationController *)moreNavigationController{
     if(!_moreNavigationController) {
-        UINavigationController *navigationController = [[UINavigationController alloc] init];
+        _JKTabBarMoreViewController *moreViewController = [[_JKTabBarMoreViewController alloc] initWithStyle:UITableViewStylePlain];
+        UINavigationController *navigationController    = [[UINavigationController alloc] initWithRootViewController:moreViewController];
+        _moreViewController = moreViewController;
         _moreNavigationController = navigationController;
+        _moreViewController.tabBarController = self;
     }
     return _moreNavigationController;
 }
@@ -206,6 +211,9 @@ static NSUInteger const JKTabBarMaximumItemCount = 5;
         }
     }];
     self.tabBar.items = items;
+    
+    //Realod More TableView Controller to update contents.
+    if(self.shouldShowMore) [self.moreViewController.tableView reloadData];
 }
 
 #pragma mark - JKTabBarDelegate

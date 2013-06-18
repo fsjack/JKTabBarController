@@ -29,6 +29,8 @@
  * One may not count as feature but we waste time implementing this,which is customizeable view controller.You can customize the count of items to display in customizedViewController we provide or you write your own.x
  */
 
+extern NSUInteger const JKTabBarMaximumItemCount;
+
 typedef NS_ENUM(NSUInteger, JKTabBarPosition){
     JKTabBarPositionBottom,
     JKTabBarPositionTop,

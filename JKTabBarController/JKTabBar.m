@@ -10,7 +10,7 @@
 #import "JKTabBarItem.h"
 #import "JKTabBar+Orientation.h"
 #import "JKTabBarItem+Private.h"
-#import "JKAppearanceProxy.h"
+#import "_JKAppearanceProxy.h"
 
 static NSUInteger const JKTabBarItemDefaultSelectedIndex = 0;
 
@@ -81,7 +81,7 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     //Set up selection indicator image ivew
     UIImageView *selectionIndicatorImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     self.selectionIndicatorImageView = selectionIndicatorImageView;
-    self.selectionIndicatorImageView.contentMode = UIViewContentModeCenter;    
+    self.selectionIndicatorImageView.contentMode = UIViewContentModeScaleAspectFit;    
     selectionIndicatorImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self addSubview:selectionIndicatorImageView];
 }

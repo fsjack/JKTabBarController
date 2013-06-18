@@ -47,8 +47,8 @@
                                            [[UINavigationController alloc] initWithRootViewController:greenViewController],
                                            [[UINavigationController alloc] initWithRootViewController:drakViewController],
                                            [[UINavigationController alloc] initWithRootViewController:purpleViewController],
-//                                           [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil],
-//                                           [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil],     
+                                           [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil],
+                                           [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil],
      ] animated:YES];
     
     tabBarController.tabBar.selectionIndicatorAnimable = YES;
@@ -63,6 +63,14 @@
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [redViewController.tabBarItem_jk setBadgeValue:@"0" animated:YES];
+    });
+    
+    __weak __typeof(&*self)weakSelf = self;
+    delayInSeconds = 4.0;
+    popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        weakSelf.window.rootViewController = nil;
+        weakSelf.tabBarController = nil;
     });
     
     return YES;

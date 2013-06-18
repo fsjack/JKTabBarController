@@ -8,7 +8,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "JKTabBarItem.h"
 #import "JKTabBarItem+Private.h"
-#import "JKAppearanceProxy.h"
+#import "_JKAppearanceProxy.h"
 
 static CGFloat const JKTabBarButtonImageVerticalOffset = 5.0f;
 
@@ -72,7 +72,7 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 - (void)didMoveToWindow{
     [super didMoveToWindow];
     /* excute appearance recoraded invocation when button is moved to window. */    
-    [[JKAppearanceProxy appearanceForClass:[JKTabBarItem class]] startForwarding:self.tabBarItem];
+    [[_JKAppearanceProxy appearanceForClass:[JKTabBarItem class]] startForwarding:self.tabBarItem];
 }
 
 @end
@@ -80,7 +80,7 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 @implementation JKTabBarItem
 #pragma mark - appearence
 + (instancetype)appearance{
-    return [JKAppearanceProxy appearanceForClass:self];
+    return [_JKAppearanceProxy appearanceForClass:self];
 }
 
 #pragma mark - property
@@ -166,6 +166,10 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 }
 
 #pragma mark - initialziation
+- (id)init{
+    return [self initWithTitle:nil image:nil];
+}
+
 - (id)initWithTitle:(NSString *)title image:(UIImage *)image{
     self = [super init];
     if(self){

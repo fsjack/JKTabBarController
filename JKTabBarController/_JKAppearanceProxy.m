@@ -6,15 +6,15 @@
 //  Copyright (c) 2013年 Weico. All rights reserved.
 //
 
-#import "JKAppearanceProxy.h"
-@interface JKAppearanceProxy()
+#import "_JKAppearanceProxy.h"
+@interface _JKAppearanceProxy()
 @property (nonatomic)           Class customizableClass;
 @property (nonatomic,strong)    NSMutableArray *appearanceInvocations;
 @end
 
 static NSMutableDictionary *_allAppearances = nil;
 
-@implementation JKAppearanceProxy
+@implementation _JKAppearanceProxy
 #pragma mark - static methods
 + (id)appearanceForClass:(Class)class{
     // create the dictionary if not exists
@@ -26,7 +26,7 @@ static NSMutableDictionary *_allAppearances = nil;
     });
     
     if (![_allAppearances objectForKey:NSStringFromClass(class)]){
-        JKAppearanceProxy *appearance = [[JKAppearanceProxy alloc] init];
+        _JKAppearanceProxy *appearance = [[_JKAppearanceProxy alloc] init];
         appearance.customizableClass = class;
         [_allAppearances setObject:appearance forKey:NSStringFromClass(class)];
         

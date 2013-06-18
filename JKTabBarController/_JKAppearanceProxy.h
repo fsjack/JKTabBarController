@@ -26,7 +26,7 @@
  Done.
  */
 
-@interface JKAppearanceProxy : NSObject
+@interface _JKAppearanceProxy : NSObject
 + (id)appearanceForClass:(Class)class;
 - (void)startForwarding:(id)sender; //call this method when view will move to superview or as view init.
 @end
