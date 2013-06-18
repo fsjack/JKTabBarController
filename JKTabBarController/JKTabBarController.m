@@ -185,6 +185,7 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 }
 
 - (void)setViewControllers:(NSArray *)viewControllers animated:(BOOL)animated{
+    /*! Need FIX: Not yet impletment animation effect. */
     _viewControllers = [viewControllers copy];
     
     NSMutableArray *items = [NSMutableArray array];

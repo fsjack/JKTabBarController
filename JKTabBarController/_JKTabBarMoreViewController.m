@@ -7,6 +7,7 @@
 //
 
 #import "_JKTabBarMoreViewController.h"
+#import "_JKTabBarEditViewController.h"
 #import "JKTabBarController.h"
 #import "JKTabBarItem.h"
 @interface _JKTabBarMoreViewController ()
@@ -55,6 +56,9 @@
 
 #pragma mark - action
 - (void)editAction:(UIBarButtonItem *)item{
+    _JKTabBarEditViewController *editViewController = [[_JKTabBarEditViewController alloc] init];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:editViewController];
+    [self presentViewController:navigationController animated:YES completion:nil];
 }
 
 #pragma mark - uitableview datasource

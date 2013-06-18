@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8C0585611770001A00373848 /* _JKTabBarMoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0585601770001A00373848 /* _JKTabBarMoreViewController.m */; };
+		8C0585641770130C00373848 /* _JKTabBarEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0585631770130C00373848 /* _JKTabBarEditViewController.m */; };
 		8C2A185717618D4E0094525A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2A185617618D4E0094525A /* UIKit.framework */; };
 		8C2A185917618D4E0094525A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2A185817618D4E0094525A /* Foundation.framework */; };
 		8C2A185B17618D4E0094525A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2A185A17618D4E0094525A /* CoreGraphics.framework */; };
@@ -61,6 +62,8 @@
 /* Begin PBXFileReference section */
 		8C05855F1770001A00373848 /* _JKTabBarMoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _JKTabBarMoreViewController.h; sourceTree = "<group>"; };
 		8C0585601770001A00373848 /* _JKTabBarMoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _JKTabBarMoreViewController.m; sourceTree = "<group>"; };
+		8C0585621770130C00373848 /* _JKTabBarEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _JKTabBarEditViewController.h; sourceTree = "<group>"; };
+		8C0585631770130C00373848 /* _JKTabBarEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _JKTabBarEditViewController.m; sourceTree = "<group>"; };
 		8C2A185317618D4E0094525A /* JKTabBarControllerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JKTabBarControllerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C2A185617618D4E0094525A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8C2A185817618D4E0094525A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -233,6 +236,8 @@
 				8CBD61ED176EEE4100FE7920 /* _JKAppearanceProxy.m */,
 				8C05855F1770001A00373848 /* _JKTabBarMoreViewController.h */,
 				8C0585601770001A00373848 /* _JKTabBarMoreViewController.m */,
+				8C0585621770130C00373848 /* _JKTabBarEditViewController.h */,
+				8C0585631770130C00373848 /* _JKTabBarEditViewController.m */,
 			);
 			name = JKTabBarController;
 			path = ../../JKTabBarController;
@@ -395,6 +400,7 @@
 				8C2A187017618D4E0094525A /* JKViewController.m in Sources */,
 				8C2A189417618D8F0094525A /* JKTabBarController.m in Sources */,
 				8C2A189717618DA30094525A /* JKTabBar.m in Sources */,
+				8C0585641770130C00373848 /* _JKTabBarEditViewController.m in Sources */,
 				8CBD61EE176EEE4100FE7920 /* _JKAppearanceProxy.m in Sources */,
 				8C2A189A17618DBD0094525A /* JKTabBarItem.m in Sources */,
 			);
