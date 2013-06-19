@@ -19,14 +19,17 @@
     // Override point for customization after application launch.
     JKTabBarController *tabBarController = [[JKTabBarController alloc] init];
     self.tabBarController = tabBarController;
+    tabBarController.selectedControllerNavigationItem = YES;
     
     UIViewController *redViewController = [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil];
     redViewController.tabBarItem_jk = [[JKTabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"home_tab_icon_1"]];
     redViewController.view.backgroundColor = [UIColor redColor];
+    redViewController.title = @"test";
     
     UIViewController *blueViewController = [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil];
     blueViewController.tabBarItem_jk = [[JKTabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"home_tab_icon_2"]];
     blueViewController.view.backgroundColor = [UIColor blueColor];
+    blueViewController.title = @"test2";
     
     UIViewController *greenViewController = [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil];
     greenViewController.tabBarItem_jk = [[JKTabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"home_tab_icon_3"]];
@@ -47,8 +50,8 @@
                                            [[UINavigationController alloc] initWithRootViewController:greenViewController],
                                            [[UINavigationController alloc] initWithRootViewController:drakViewController],
                                            [[UINavigationController alloc] initWithRootViewController:purpleViewController],
-                                           [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil],
-                                           [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil],
+//                                           [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil],
+//                                           [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil],
      ] animated:YES];
     
     tabBarController.tabBar.selectionIndicatorAnimable = YES;

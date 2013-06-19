@@ -30,6 +30,14 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 @end
 
 @implementation JKTabBarController
+#pragma mark - navigation item
+- (UINavigationItem *)navigationItem{
+    if(self.selectedControllerNavigationItem)
+        return self.selectedViewController.navigationItem;
+    else
+        return [super navigationItem];
+}
+
 #pragma mark - Private Methods
 - (void)_setupAppearence{
     JKTabBar *tabBar        = [[JKTabBar alloc] initWithFrame:CGRectZero];
@@ -220,6 +228,12 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 #pragma mark - JKTabBarDelegate
 - (void)tabBar:(JKTabBar *)tabBar didSelectItem:(JKTabBarItem *)item{
     [self _selectTabBarItem:item];
+    
+    /* self.navigationController update it's navigation item */
+    if(self.selectedControllerNavigationItem){
+        [self.navigationController setNeedsStatusBarAppearanceUpdate];
+    }
+    
     if([self.delegate respondsToSelector:@selector(tabBarController:didSelectViewController:)])
         [self.delegate tabBarController:self didSelectViewController:[self _viewControllerForTabBarItem:item]];
 }

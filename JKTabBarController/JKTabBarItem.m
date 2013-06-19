@@ -278,8 +278,8 @@ static NSString * const JKTabBarItemBadgePopAnimationKey = @"JKTabBarItemBadgePo
         [self.badgeButton setTitle:badgeValue forState:UIControlStateNormal];
         
         self.badgeButton.frame = (CGRect){
-            CGRectGetMidX(self.contentView.bounds) - self.badgeSize.width/2 + JKTabBarBadgeViewDefaultCenterOffset.horizontal + self.badgeInsets.left ,
-            CGRectGetMidY(self.contentView.bounds) - self.badgeSize.height/2 - JKTabBarBadgeViewDefaultCenterOffset.vertical + self.badgeInsets.top ,
+            {CGRectGetMidX(self.contentView.bounds) - self.badgeSize.width/2 + JKTabBarBadgeViewDefaultCenterOffset.horizontal + self.badgeInsets.left ,
+            CGRectGetMidY(self.contentView.bounds) - self.badgeSize.height/2 - JKTabBarBadgeViewDefaultCenterOffset.vertical + self.badgeInsets.top} ,
             self.badgeSize
         };
         self.badgeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;

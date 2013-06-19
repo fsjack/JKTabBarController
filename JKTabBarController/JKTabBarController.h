@@ -62,6 +62,9 @@ NS_INLINE BOOL JKTabBarIsHorizontal(JKTabBarPosition position) {
 @property (nonatomic,readonly)  JKTabBar *tabBar; // Provided for -[UIActionSheet showFromTabBar:]. Attempting to modify the contents of the tab bar directly will throw an exception.
 @property (nonatomic,copy)      NSArray *customizableViewControllers; // If non-nil, then the "More" view will include an "Edit" button that displays customization UI for the specified controllers. By default, all view controllers are customizable.
 @property (nonatomic,weak)      id<JKTabBarControllerDelegate> delegate;
+
+@property (nonatomic) BOOL selectedControllerNavigationItem; //NO by default.Set YES could let navigation controller of tabbar controller show selected controller's navigation item.
+
 @end
 
 @protocol JKTabBarControllerDelegate <NSObject>

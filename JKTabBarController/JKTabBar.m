@@ -11,6 +11,7 @@
 #import "JKTabBar+Orientation.h"
 #import "JKTabBarItem+Private.h"
 #import "_JKAppearanceProxy.h"
+#import "_JKTabBarEditViewController.h"
 
 static NSUInteger const JKTabBarItemDefaultSelectedIndex = 0;
 
@@ -47,6 +48,7 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
 - (void)beginCustomizingItems:(NSArray *)items{
     
 }
+
 - (BOOL)endCustomizingAnimated:(BOOL)animated{
     return NO;
 }
@@ -190,7 +192,22 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     
     CGFloat itemButtonWidth = (tabBarWidth - customViewWidth - (JKTabBarButtonItemPadding * self.items.count-1) - JKTabBarButtonItemLeftMargin*2) / (self.items.count - customViews.count);
     
-    return rotateSize(CGSizeMake(itemButtonWidth, tabBarHeight - JKTabBarButtonItemTopMargin*2 ), self.orientation);
+    return SwapSizeWithOrientation(CGSizeMake(itemButtonWidth, tabBarHeight - JKTabBarButtonItemTopMargin*2 ), self.orientation);
+}
+
+#pragma mark - Uility
+static CGSize SwapSizeWithOrientation(CGSize oldSize,JKTabBarOrientation orientation){
+    if(orientation == JKTabBarOrientationHorizontal)
+        return oldSize;
+    else
+        return CGSizeMake(oldSize.height, oldSize.width);
+}
+
+static CGRect SwapFrameWithOrientation(CGRect frame,JKTabBarOrientation orientation){
+    if(orientation == JKTabBarOrientationHorizontal)
+        return frame;
+    else
+        return CGRectMake(frame.origin.y, frame.origin.x, frame.size.width, frame.size.height);
 }
 
 #pragma mark - Layout
@@ -205,13 +222,13 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     [self.items enumerateObjectsUsingBlock:^(JKTabBarItem *item, NSUInteger idx, BOOL *stop) {
         UIView *itemContentView = item.contentView;
         if(item.itemType == JKTabBarItemTypeButton){
-            itemContentView.frame = rotateFrame((CGRect){ itemButtonOffsetX , JKTabBarButtonItemTopMargin , itemButtonSize },weakSelf.orientation);
+            itemContentView.frame = SwapFrameWithOrientation((CGRect){ {itemButtonOffsetX , JKTabBarButtonItemTopMargin} , itemButtonSize },weakSelf.orientation);
             
             CGFloat offsetLength = (weakSelf.orientation == JKTabBarOrientationHorizontal ? itemButtonSize.width : itemButtonSize.height);
             itemButtonOffsetX += (offsetLength + JKTabBarButtonItemPadding);
             
         }else if(item.itemType == JKTabBarItemTypeCustomView){
-            itemContentView.frame = rotateFrame((CGRect){ itemButtonOffsetX , JKTabBarButtonItemTopMargin , itemContentView.bounds.size },weakSelf.orientation);
+            itemContentView.frame = SwapFrameWithOrientation((CGRect){ {itemButtonOffsetX , JKTabBarButtonItemTopMargin} , itemContentView.bounds.size },weakSelf.orientation);
             
             CGFloat offsetLength = (weakSelf.orientation == JKTabBarOrientationHorizontal ? itemContentView.bounds.size.width : itemContentView.bounds.size.height);
             itemButtonOffsetX += (offsetLength + JKTabBarButtonItemPadding);
@@ -220,28 +237,6 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     
     //set selection indictor image frame
     self.selectionIndicatorImageView.frame = self.selectedItem.contentView.frame;
-}
-
-#pragma mark - Uility
-CGSize rotateSize(CGSize oldSize,JKTabBarOrientation orientation){
-    if(orientation == JKTabBarOrientationHorizontal)
-        return oldSize;
-    else
-        return CGSizeMake(oldSize.height, oldSize.width);
-}
-
-CGPoint rotateOrigin(CGPoint oldPoint,JKTabBarOrientation orientation){
-    if(orientation == JKTabBarOrientationHorizontal)
-        return oldPoint;
-    else
-        return CGPointMake(oldPoint.y, oldPoint.x);
-}
-
-CGRect rotateFrame(CGRect frame,JKTabBarOrientation orientation){
-    if(orientation == JKTabBarOrientationHorizontal)
-        return frame;
-    else
-        return CGRectMake(frame.origin.y, frame.origin.x, frame.size.width, frame.size.height);
 }
 
 @end
