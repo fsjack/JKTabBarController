@@ -231,7 +231,9 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     
     /* self.navigationController update it's navigation item */
     if(self.selectedControllerNavigationItem){
-        [self.navigationController setNeedsStatusBarAppearanceUpdate];
+        BOOL navigationBarHidden = self.navigationController.navigationBarHidden;
+        [self.navigationController setNavigationBarHidden:YES];
+        [self.navigationController setNavigationBarHidden:navigationBarHidden];
     }
     
     if([self.delegate respondsToSelector:@selector(tabBarController:didSelectViewController:)])
