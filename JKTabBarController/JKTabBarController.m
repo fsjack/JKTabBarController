@@ -106,15 +106,14 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 - (void)_selectTabBarItem:(JKTabBarItem *)tabBarItem{
     UIViewController *viewController = [self _viewControllerForTabBarItem:tabBarItem];
     
-    [self addChildViewController:viewController];
-    [viewController willMoveToParentViewController:self];
     [self.selectedViewController willMoveToParentViewController:nil];
-    
-    viewController.view.frame = self.containerView.bounds;
-    [self.containerView addSubview:viewController.view];
     [self.selectedViewController.view removeFromSuperview];
-    
     [self.selectedViewController removeFromParentViewController];
+    
+    [self addChildViewController:viewController];
+    [self.containerView addSubview:viewController.view];
+    viewController.view.frame = self.containerView.bounds;
+    viewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [viewController didMoveToParentViewController:self];
     
     self.selectedViewController = viewController;
