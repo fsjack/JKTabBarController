@@ -15,7 +15,6 @@
 
 static NSUInteger const JKTabBarItemDefaultSelectedIndex = 0;
 
-static CGFloat const JKTabBarShadowDefaultHeight    = 10.f;
 static CGFloat const JKTabBarButtonItemPadding      = 0.0f;
 
 static CGFloat const JKTabBarButtonItemTopMargin    = 0.0f;
@@ -29,7 +28,7 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
 @property (weak, nonatomic)   UIImageView   *selectionIndicatorImageView;
 
 @property (readonly, nonatomic) NSArray *allCustomButtonView;
-@property (readonly, nonatomic) CGSize itemButtonSize;
+@property (readonly, nonatomic) CGFloat itemButtonWidth;
 
 @property (nonatomic) JKTabBarOrientation orientation;
 @end
@@ -65,13 +64,14 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
 
 #pragma mark - Privte
 - (void)_setupAppearence{
-    /* Need FIX: frame is different depend on tabbar position
+    /* Need FIX: frame is different depend on tabbar position */
     //Set up ShadowImageView
-    UIImageView *shadowImageView = [[UIImageView alloc] initWithFrame:(CGRect){ 0,-JKTabBarShadowDefaultHeight,CGRectGetWidth(self.bounds),JKTabBarShadowDefaultHeight }];
+    UIImageView *shadowImageView = [[UIImageView alloc] initWithFrame:(CGRect){ {0 , 0} , {CGRectGetWidth(self.bounds), 0} }];
     self.shadowImageView = shadowImageView;
     shadowImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     [self addSubview:shadowImageView];
-     */
+    
+    self.backgroundColor = [UIColor clearColor];
     
     //Set up backgroundImageView
     UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:self.bounds];
@@ -96,7 +96,7 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     __weak __typeof(&*self)weakSelf = self;
     [self.items enumerateObjectsUsingBlock:^(JKTabBarItem *item, NSUInteger idx, BOOL *stop) {
         item.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [item addTarget:self action:@selector(_selecteButtonItem:) forControlEvents:UIControlEventTouchDown];
+        [item addTarget:self action:@selector(_selecteButtonItem:) forControlEvents:UIControlEventTouchUpInside];
         [weakSelf addSubview:item.contentView];
         if(JKTabBarItemDefaultSelectedIndex == idx) [weakSelf _selecteButtonItem:item.contentView];
         item.tag = idx;
@@ -112,26 +112,21 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
 #pragma mark - Action
 - (void)_selecteButtonItem:(id)sender{
     UIButton *button = sender;
-    JKTabBarItem *item = [self tabBarItemForItemButton:button];
-    if(item == self.selectedItem) return;
+    JKTabBarItem *item = [self tabBarItemForItemButton:sender];
     
     UIButton *selectedButton = (UIButton *)self.selectedItem.contentView;
     
-    [button setSelected:!button.isSelected];
-    [selectedButton setSelected:!selectedButton.isSelected];
-
+    [item setEnabled:!item.isEnabled];
+    [self.selectedItem setEnabled:!selectedButton.isSelected];
     
     UIImageView *indicatorView = self.selectionIndicatorImageView;
-    if(self.selectionIndicatorAnimable) self.userInteractionEnabled = NO;
     
-    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:self.selectionIndicatorAnimable ? JKTabBarSelectionIndicatorAnimationDuration : 0.0f
                           delay:0.0f
-                        options:UIViewAnimationCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState
+                        options:( UIViewAnimationCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState )
                      animations:^{
                          indicatorView.frame = button.frame;
                      } completion:^(BOOL finished) {
-                         if(finished) weakSelf.userInteractionEnabled = YES;
                      }];
     self.selectedItem = item;
     
@@ -144,6 +139,12 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     if(_backgroundImage == backgroundImage) return;
     _backgroundImage = backgroundImage;
     [self.backgroundImageView setImage:backgroundImage];
+    
+    [self.backgroundImageView sizeToFit];
+    self.backgroundImageView.frame = (CGRect){
+        {self.backgroundImageView.frame.origin.x , self.bounds.size.height - self.backgroundImageView.frame.size.height},
+        self.backgroundImageView.bounds.size
+    };
 }
 
 - (void)setSelectionIndicatorImage:(UIImage *)selectionIndicatorImage{
@@ -167,7 +168,7 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     if(shadowImage == _shadowImage) return;
     _shadowImage = shadowImage;
     
-    [_shadowImageView setImage:shadowImage];
+    [self.shadowImageView setImage:shadowImage];
 }
 
 - (void)setItems:(NSArray *)items{
@@ -180,34 +181,18 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     return [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.itemType = %d",JKTabBarItemTypeCustomView]];
 }
 
-- (CGSize)itemButtonSize{
-    CGFloat __block customViewWidth;
+- (CGFloat)itemButtonWidth{
+    CGFloat __block customViewWidth = 0.f;
     NSArray *customViews = [self allCustomButtonView];
     [customViews enumerateObjectsUsingBlock:^(JKTabBarItem *item, NSUInteger idx, BOOL *stop) {
         customViewWidth += item.contentView.bounds.size.width;
     }];
     
     CGFloat tabBarWidth     = (self.orientation == JKTabBarOrientationHorizontal ? CGRectGetWidth(self.bounds) : CGRectGetHeight(self.bounds));
-    CGFloat tabBarHeight    = (self.orientation == JKTabBarOrientationHorizontal ? CGRectGetHeight(self.bounds) : CGRectGetWidth(self.bounds));
     
     CGFloat itemButtonWidth = (tabBarWidth - customViewWidth - (JKTabBarButtonItemPadding * self.items.count-1) - JKTabBarButtonItemLeftMargin*2) / (self.items.count - customViews.count);
     
-    return SwapSizeWithOrientation(CGSizeMake(itemButtonWidth, tabBarHeight - JKTabBarButtonItemTopMargin*2 ), self.orientation);
-}
-
-#pragma mark - Uility
-static CGSize SwapSizeWithOrientation(CGSize oldSize,JKTabBarOrientation orientation){
-    if(orientation == JKTabBarOrientationHorizontal)
-        return oldSize;
-    else
-        return CGSizeMake(oldSize.height, oldSize.width);
-}
-
-static CGRect SwapFrameWithOrientation(CGRect frame,JKTabBarOrientation orientation){
-    if(orientation == JKTabBarOrientationHorizontal)
-        return frame;
-    else
-        return CGRectMake(frame.origin.y, frame.origin.x, frame.size.width, frame.size.height);
+    return itemButtonWidth;
 }
 
 #pragma mark - Layout
@@ -215,28 +200,46 @@ static CGRect SwapFrameWithOrientation(CGRect frame,JKTabBarOrientation orientat
     [super layoutSubviews];
     
     //set tab bar button frame
-    CGSize itemButtonSize = self.itemButtonSize;
+    CGFloat itemButtonWidth = self.itemButtonWidth;
+    CGSize barSize = self.bounds.size;
     
     CGFloat __block itemButtonOffsetX = JKTabBarButtonItemLeftMargin;
-    __weak __typeof(&*self)weakSelf = self;
+    
     [self.items enumerateObjectsUsingBlock:^(JKTabBarItem *item, NSUInteger idx, BOOL *stop) {
         UIView *itemContentView = item.contentView;
+        [itemContentView sizeToFit];
+        
+        CGFloat itemButtonOffsetY = barSize.height - itemContentView.bounds.size.height + JKTabBarButtonItemTopMargin;
+        
         if(item.itemType == JKTabBarItemTypeButton){
-            itemContentView.frame = SwapFrameWithOrientation((CGRect){ {itemButtonOffsetX , JKTabBarButtonItemTopMargin} , itemButtonSize },weakSelf.orientation);
+            itemContentView.frame = (CGRect){
+                { itemButtonOffsetX , itemButtonOffsetY} ,
+                { itemButtonWidth , itemContentView.bounds.size.height }
+            };
             
-            CGFloat offsetLength = (weakSelf.orientation == JKTabBarOrientationHorizontal ? itemButtonSize.width : itemButtonSize.height);
+            CGFloat offsetLength = itemButtonWidth;
             itemButtonOffsetX += (offsetLength + JKTabBarButtonItemPadding);
             
         }else if(item.itemType == JKTabBarItemTypeCustomView){
-            itemContentView.frame = SwapFrameWithOrientation((CGRect){ {itemButtonOffsetX , JKTabBarButtonItemTopMargin} , itemContentView.bounds.size },weakSelf.orientation);
             
-            CGFloat offsetLength = (weakSelf.orientation == JKTabBarOrientationHorizontal ? itemContentView.bounds.size.width : itemContentView.bounds.size.height);
+            itemContentView.frame = (CGRect){
+                {itemButtonOffsetX , itemButtonOffsetY} ,
+                itemContentView.bounds.size
+            };
+            
+            CGFloat offsetLength = itemContentView.bounds.size.width;
             itemButtonOffsetX += (offsetLength + JKTabBarButtonItemPadding);
         }
     }];
     
     //set selection indictor image frame
     self.selectionIndicatorImageView.frame = self.selectedItem.contentView.frame;
+    
+    [self.shadowImageView sizeToFit];
+    self.shadowImageView.frame = (CGRect){
+        { 0 , -CGRectGetHeight(self.shadowImageView.bounds) },
+        self.shadowImageView.bounds.size
+    };
 }
 
 @end

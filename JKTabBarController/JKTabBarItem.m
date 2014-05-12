@@ -13,9 +13,9 @@
 static CGFloat const JKTabBarButtonImageVerticalOffset = 5.0f;
 
 static CGFloat const JKTabBarBadgeViewPopAnimationDuration = 0.4f;
-static CGFloat const JKTabBarBadgeViewFadeAnimationDuration = 0.2f;
+static CGFloat const JKTabBarBadgeViewFadeAnimationDuration = 0.15f;
 
-static UIOffset const JKTabBarBadgeViewDefaultCenterOffset = (UIOffset){ 15.0f , 10.0f };
+static UIOffset const JKTabBarBadgeViewDefaultCenterOffset = (UIOffset){ 15.0f , 8.0f };
 static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 
 @interface JKTabBarItem ()
@@ -33,11 +33,6 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 @implementation JKTabBarButton
 - (void)setHighlighted:(BOOL)highlighted{
     [super setHighlighted:NO]; //To stop button from showing UIControlStateHighlight state
-}
-
-- (void)setSelected:(BOOL)selected{
-    [super setSelected:selected];
-    [super setEnabled:!selected];
 }
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect{
@@ -96,7 +91,7 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 }
 
 - (UIImage *)finishedUnselectedImage{
-    return [self.itemButton imageForState:UIControlStateDisabled];
+    return [self.itemButton imageForState:UIControlStateNormal];
 }
 
 - (UIEdgeInsets)imageInsets{
@@ -116,11 +111,11 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 }
 
 - (void)setEnabled:(BOOL)enabled{
-    [self.itemButton setEnabled:enabled];
+    [self.itemButton setSelected:enabled];
 }
 
 - (BOOL)isEnabled{
-    return self.itemButton.isEnabled;
+    return self.itemButton.isSelected;
 }
 
 - (NSString *)title{
@@ -178,6 +173,7 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
         JKTabBarButton *button = [JKTabBarButton buttonWithType:UIButtonTypeCustom];
         _itemButton         = button;
         button.tabBarItem   = self;
+        
         [button setTitle:title forState:UIControlStateNormal];
         [button setImage:image forState:UIControlStateNormal];
         [button setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
@@ -203,7 +199,7 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 
 #pragma mark - public methods
 - (void)setFinishedSelectedImage:(UIImage *)selectedImage withFinishedUnselectedImage:(UIImage *)unselectedImage{
-    [self.itemButton setImage:selectedImage forState:UIControlStateSelected|UIControlStateDisabled];
+    [self.itemButton setImage:selectedImage forState:UIControlStateSelected];
     [self.itemButton setImage:unselectedImage forState:UIControlStateNormal];
 }
 
@@ -213,6 +209,14 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 
 - (void)removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents{
     [self.itemButton removeTarget:target action:action forControlEvents:controlEvents];
+}
+
+- (void)sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event{
+    [self.itemButton sendAction:action to:target forEvent:event];
+}
+
+- (void)sendActionsForControlEvents:(UIControlEvents)controlEvents{
+    [self.itemButton sendActionsForControlEvents:controlEvents];
 }
 
 #pragma mark - animation
@@ -227,26 +231,39 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
     
     CAKeyframeAnimation *opacityAnimation = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
     opacityAnimation.values = @[ @(0.0f) , @(0.1f) , @(1.0f) ];
-    
     opacityAnimation.keyTimes = @[ @(0.0f) , @(0.1f) , @(0.4f) ];
+    
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
     animationgroup.animations = [NSArray arrayWithObjects:scaleAnimation, opacityAnimation, nil];
     animationgroup.duration = JKTabBarBadgeViewPopAnimationDuration;
+    animationgroup.fillMode = kCAFillModeForwards;
+    animationgroup.removedOnCompletion = NO;
     
     return animationgroup;
+}
+
+- (CAAnimation *)hideAnimation{
+    CAKeyframeAnimation *opacityAnimation = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+    opacityAnimation.values = @[ @(0.0f) , @(1.0f) ];
+    opacityAnimation.keyTimes = @[ @(1.0f) , @(0.0f) ];
+    opacityAnimation.duration = JKTabBarBadgeViewFadeAnimationDuration;
+    opacityAnimation.fillMode = kCAFillModeForwards;
+    opacityAnimation.removedOnCompletion = NO;
+    
+    return opacityAnimation;
 }
 
 #pragma mark - badge
 - (CGSize)badgeSize{
     [self.badgeButton sizeToFit];
     CGSize badgeSize = self.badgeButton.bounds.size;
-    
+
     if(CGRectGetWidth(self.badgeButton.bounds) < JKTabBarBadgeViewMinmumSize.width) badgeSize.width = JKTabBarBadgeViewMinmumSize.width;
     if(CGRectGetHeight(self.badgeButton.bounds) < JKTabBarBadgeViewMinmumSize.height) badgeSize.height = JKTabBarBadgeViewMinmumSize.height;
-    
-    badgeSize.width     = badgeSize.width - self.badgeInsets.right;
-    badgeSize.height    = badgeSize.height - self.badgeInsets.bottom;
-    
+ 
+    badgeSize.width  = badgeSize.width - self.badgeInsets.right;
+    badgeSize.height = badgeSize.height - self.badgeInsets.bottom;
+
     return badgeSize;
 }
 
@@ -260,6 +277,7 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
         [badgeButton setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         [badgeButton setAdjustsImageWhenDisabled:NO];
         [badgeButton setEnabled:NO];
+        [badgeButton setContentEdgeInsets:UIEdgeInsetsMake(0, 11, 0, 10)];
     }
     return _badgeButton;
 }
@@ -269,6 +287,7 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 }
 
 static NSString * const JKTabBarItemBadgePopAnimationKey = @"JKTabBarItemBadgePopAnimationKey";
+static NSString * const JKTabBarItemBadgeHideAnimationKey = @"JKTabBarItemBadgeHideAnimationKey";
 - (void)setBadgeValue:(NSString *)badgeValue{
     [self setBadgeValue:badgeValue animated:NO];
 }
@@ -284,20 +303,27 @@ static NSString * const JKTabBarItemBadgePopAnimationKey = @"JKTabBarItemBadgePo
         };
         self.badgeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         
+        self.badgeButton.alpha = 1.0f;
         [self.contentView addSubview:self.badgeButton];
+        
+        [self.badgeButton.layer removeAnimationForKey:JKTabBarItemBadgeHideAnimationKey];
+        
         if(![self.badgeButton.layer animationForKey:JKTabBarItemBadgePopAnimationKey] && animated)
             [self.badgeButton.layer addAnimation:[self popAnimation] forKey:JKTabBarItemBadgePopAnimationKey];
     }else{
-        [UIView animateWithDuration:(animated ? JKTabBarBadgeViewFadeAnimationDuration : 0.0f)
-                              delay:0.0f
-                            options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState
-                         animations:^{
-                             self.badgeButton.alpha = 0.0f;
-                         } completion:^(BOOL finished) {
-                             [self.badgeButton removeFromSuperview];
-                             [self.badgeButton.layer removeAnimationForKey:JKTabBarItemBadgePopAnimationKey];
-                         }];
+        [self.badgeButton.layer removeAnimationForKey:JKTabBarItemBadgePopAnimationKey];
+        if(![self.badgeButton.layer animationForKey:JKTabBarItemBadgeHideAnimationKey] && animated){
+            CAAnimation *hideAnimation = [self hideAnimation];
+            hideAnimation.delegate = self;
+            [self.badgeButton.layer addAnimation:hideAnimation forKey:JKTabBarItemBadgeHideAnimationKey];
+        }else{
+            self.badgeButton.alpha = 0.0f;
+        }
     }
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)finished{
+    if(finished) self.badgeButton.alpha = 0.0f;
 }
 
 #pragma mark - badge property 

@@ -10,9 +10,10 @@
 #import "JKTabBarItem.h"
 #import "JKTabBar+Orientation.h"
 #import "_JKTabBarMoreViewController.h"
+#import "JKTabBarItem+Private.h"
 #import <objc/runtime.h>
 
-static CGFloat const JKTabBarDefaultHeight = 50.0f;
+static CGFloat const JKTabBarDefaultHeight = 45.0f;
 NSUInteger const JKTabBarMaximumItemCount = 5;
 
 @interface JKTabBarController (){
@@ -22,11 +23,12 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     }_flags;
 }
 @property (nonatomic,readonly) BOOL shouldShowMore;
-@property (nonatomic,strong) UINavigationController *moreNavigationController;
+@property (nonatomic,strong) UINavigationController      *moreNavigationController;
 @property (nonatomic,strong) _JKTabBarMoreViewController *moreViewController;
-@property (nonatomic,strong) JKTabBarItem           *moreTabBarItem;
-@property (nonatomic,weak)   UIView   *containerView;
-@property (nonatomic,weak)   JKTabBar *tabBar;
+@property (nonatomic,strong) JKTabBarItem                *moreTabBarItem;
+@property (nonatomic,weak)   UIView                      *containerView;
+@property (nonatomic,weak)   JKTabBar                    *tabBar;
+@property (nonatomic,readonly) CGFloat                   tabBarHeight;
 @end
 
 @implementation JKTabBarController
@@ -42,13 +44,11 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 - (void)_setupAppearence{
     JKTabBar *tabBar        = [[JKTabBar alloc] initWithFrame:CGRectZero];
     self.tabBar             = tabBar;
-    tabBar.delegate         = self;    
+    tabBar.delegate         = self;
     
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectZero];
     self.containerView = containerView;
     
-    containerView.autoresizingMask  = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    tabBar.autoresizingMask         = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:containerView];
     [self.view addSubview:tabBar];
     
@@ -84,18 +84,22 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     if(!item){
         //Need FIX: create items with data provide by protocol JKTabBarDatasource
         NSString *itemTitle = viewController.title;
-        
         UIImage *selectedImage,*unselectedImage;
+        
+        BOOL isTabTitleHidden = NO;
+        if([viewController respondsToSelector:@selector(tabTitleHidden)])
+            isTabTitleHidden = viewController.tabTitleHidden;
+        
         if([viewController respondsToSelector:@selector(tabTitle)])
             itemTitle = viewController.tabTitle;
-
+        
         if([viewController respondsToSelector:@selector(selectedTabImage)])
             selectedImage = viewController.selectedTabImage;
         
         if([viewController respondsToSelector:@selector(unselectedTabImage)])
             unselectedImage = viewController.unselectedTabImage;
         
-        item = [[JKTabBarItem alloc] initWithTitle:itemTitle image:selectedImage];
+        item = [[JKTabBarItem alloc] initWithTitle:(isTabTitleHidden ? nil : itemTitle) image:selectedImage];
         [item setFinishedSelectedImage:selectedImage withFinishedUnselectedImage:unselectedImage];
         
         viewController.tabBarItem_jk = item;
@@ -106,47 +110,111 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 - (void)_selectTabBarItem:(JKTabBarItem *)tabBarItem{
     UIViewController *viewController = [self _viewControllerForTabBarItem:tabBarItem];
     
-    [self addChildViewController:viewController];
-    [viewController willMoveToParentViewController:self];
+    if(viewController == self.selectedViewController) return;
+    
     [self.selectedViewController willMoveToParentViewController:nil];
-    
-    viewController.view.frame = self.containerView.bounds;
-    [self.containerView addSubview:viewController.view];
     [self.selectedViewController.view removeFromSuperview];
-    
     [self.selectedViewController removeFromParentViewController];
+    
+    [self addChildViewController:viewController];
+    [self.containerView addSubview:viewController.view];
+    viewController.view.frame = self.containerView.bounds;
+    viewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [viewController didMoveToParentViewController:self];
     
     self.selectedViewController = viewController;
-    self.selectedIndex = [self.tabBar.items indexOfObject:tabBarItem];
+    _selectedIndex = [self.tabBar.items indexOfObject:tabBarItem];
 }
 
 #pragma mark - Property Methods
+- (BOOL) isTabBarHidden{
+    CGRect viewBounds = self.view.bounds;
+    CGRect tabBarFrame = self.tabBar.frame;
+    
+    switch (self.tabBarPosition) {
+        case JKTabBarPositionTop:
+            return (tabBarFrame.origin.y == -JKTabBarDefaultHeight);
+        case JKTabBarPositionLeft:
+            return (tabBarFrame.origin.x == -JKTabBarDefaultHeight);
+        case JKTabBarPositionRight:
+            return (tabBarFrame.origin.x == viewBounds.size.width);
+        default:
+            return (tabBarFrame.origin.y == viewBounds.size.height);
+    }
+}
+
+- (CGFloat)tabBarHeight{
+    return JKTabBarDefaultHeight;
+}
+
+- (void)setTabBarHidden:(BOOL)tabBarHidden{
+    [self setTabBarHidden:tabBarHidden animated:NO];
+}
+
+- (void)setTabBarHidden:(BOOL)hidden animated:(BOOL)animated{
+    _tabBarHidden = hidden;
+    
+    CGRect tabBarFrame = self.tabBar.frame;
+    CGRect viewBounds = self.view.bounds;
+    CGRect containerViewFrame = self.containerView.frame;
+    
+    if(hidden){
+        tabBarFrame.origin.y = viewBounds.size.height;
+        containerViewFrame = viewBounds;
+        containerViewFrame.size.height += self.tabBarBackgroundTopInset;
+    }else{
+        tabBarFrame.origin.y = viewBounds.size.height - JKTabBarDefaultHeight;
+        containerViewFrame.size.height = viewBounds.size.height - JKTabBarDefaultHeight + self.tabBarBackgroundTopInset;
+    }
+    
+    
+    [UIView animateWithDuration:animated ? 0.2 : 0
+                          delay:0
+                        options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent
+                     animations:^{
+                         
+                         self.tabBar.frame = tabBarFrame;
+                         self.containerView.frame = containerViewFrame;
+                         
+                     } completion:nil];
+}
+
 - (void)setTabBarPosition:(JKTabBarPosition)tabBarPosition{
     _tabBarPosition = tabBarPosition;
     
     CGRect tabBarFrame,containerViewFrame;
     CGRectEdge rectEdge;
+    NSUInteger tabBarAutoResizingMask;
     switch (tabBarPosition) {
         case JKTabBarPositionTop:
             rectEdge = CGRectMinYEdge;
+            tabBarAutoResizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
             break;
         case JKTabBarPositionLeft:
             rectEdge = CGRectMinXEdge;
+            tabBarAutoResizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
             break;
         case JKTabBarPositionRight:
             rectEdge = CGRectMaxXEdge;
+            tabBarAutoResizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
             break;
         default:
             rectEdge = CGRectMaxYEdge;
+            tabBarAutoResizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
             break;
     }
     
-    CGRectDivide(self.view.bounds, &tabBarFrame, &containerViewFrame, JKTabBarDefaultHeight, rectEdge);
+    CGRectDivide(self.view.bounds, &tabBarFrame, &containerViewFrame, self.tabBarHeight , rectEdge);
     self.tabBar.frame = tabBarFrame;
+    
+    containerViewFrame.size.height = containerViewFrame.size.height + self.tabBarBackgroundTopInset;
     self.containerView.frame = containerViewFrame;
     
+    self.containerView.autoresizingMask  = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.tabBar.autoresizingMask         = tabBarAutoResizingMask;
+    
     self.tabBar.orientation = (JKTabBarIsVertical(tabBarPosition) ? JKTabBarOrientationVertical : JKTabBarOrientationHorizontal);
+    [self setTabBarHidden:self.tabBarHidden];
 }
 
 - (UINavigationController *)moreNavigationController{
@@ -168,8 +236,25 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     return _moreTabBarItem;
 }
 
+- (void)setSelectedIndex:(NSUInteger)selectedIndex{
+    if(_selectedIndex == selectedIndex) return;
+    if(selectedIndex > self.tabBar.items.count-1){
+        [[NSException exceptionWithName:NSRangeException reason:@"Selected index is larger than total count of TabBar items" userInfo:nil] raise];
+        return;
+    }
+    
+    _selectedIndex = selectedIndex;
+    JKTabBarItem *item = self.tabBar.items[selectedIndex];
+    [item sendActionsForControlEvents:UIControlEventTouchUpInside];
+}
+
 - (BOOL)shouldShowMore{
     return (self.viewControllers.count > JKTabBarMaximumItemCount ? YES : NO);
+}
+
+- (void)setTabBarBackgroundTopInset:(CGFloat)tabBarBackgroundTopInset{
+    _tabBarBackgroundTopInset = tabBarBackgroundTopInset;
+    [self setTabBarPosition:self.tabBarPosition];    
 }
 
 #pragma mark - Initialition
@@ -185,6 +270,7 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 - (void)viewDidLoad{
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    [self setTabBarPosition:self.tabBarPosition];
 }
 
 #pragma mark - Public Methods
@@ -227,11 +313,17 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 
 #pragma mark - JKTabBarDelegate
 - (void)tabBar:(JKTabBar *)tabBar didSelectItem:(JKTabBarItem *)item{
+    
+    if([self.delegate respondsToSelector:@selector(tabBarController:willSelectViewController:)])
+        [self.delegate tabBarController:self willSelectViewController:[self _viewControllerForTabBarItem:item]];
+    
     [self _selectTabBarItem:item];
     
-    /* self.navigationController update it's navigation item */
+    /*! Need FIX: self.navigationController should update it's navigation item */
     if(self.selectedControllerNavigationItem){
-        [self.navigationController setNeedsStatusBarAppearanceUpdate];
+        BOOL navigationBarHidden = self.navigationController.navigationBarHidden;
+        [self.navigationController setNavigationBarHidden:YES];
+        [self.navigationController setNavigationBarHidden:navigationBarHidden];
     }
     
     if([self.delegate respondsToSelector:@selector(tabBarController:didSelectViewController:)])
@@ -261,6 +353,7 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 
 @implementation UIViewController (JKTabBarControllerItem)
 static char *JKTabBarItemAssociationKey;
+
 - (void)setTabBarItem_jk:(JKTabBarItem *)tabBarItem_jk{
     objc_setAssociatedObject(self, &JKTabBarItemAssociationKey, tabBarItem_jk, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }

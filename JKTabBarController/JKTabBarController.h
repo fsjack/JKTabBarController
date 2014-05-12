@@ -21,7 +21,6 @@
  JKTabBarController is rotatable if all of its view controllers are rotatable.
  */
 
-
 /*
  Feature of JKTabBarController
  * Custom tab bar item,you can put a view in tabBar if you like.
@@ -60,6 +59,11 @@ NS_INLINE BOOL JKTabBarIsHorizontal(JKTabBarPosition position) {
 
 @property (nonatomic,readonly)  UINavigationController *moreNavigationController;
 @property (nonatomic,readonly)  JKTabBar *tabBar; // Provided for -[UIActionSheet showFromTabBar:]. Attempting to modify the contents of the tab bar directly will throw an exception.
+@property (nonatomic)           CGFloat tabBarBackgroundTopInset;
+
+@property (nonatomic) BOOL tabBarHidden;
+- (void)setTabBarHidden:(BOOL)hidden animated:(BOOL)animated;
+
 @property (nonatomic,copy)      NSArray *customizableViewControllers; // If non-nil, then the "More" view will include an "Edit" button that displays customization UI for the specified controllers. By default, all view controllers are customizable.
 @property (nonatomic,weak)      id<JKTabBarControllerDelegate> delegate;
 
@@ -70,6 +74,7 @@ NS_INLINE BOOL JKTabBarIsHorizontal(JKTabBarPosition position) {
 @protocol JKTabBarControllerDelegate <NSObject>
 @optional
 - (BOOL)tabBarController:(JKTabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController;
+- (void)tabBarController:(JKTabBarController *)tabBarController willSelectViewController:(UIViewController *)viewController;
 - (void)tabBarController:(JKTabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController;
 
 - (void)tabBarController:(JKTabBarController *)tabBarController willBeginCustomizingViewControllers:(NSArray *)viewControllers;
@@ -79,6 +84,7 @@ NS_INLINE BOOL JKTabBarIsHorizontal(JKTabBarPosition position) {
 
 @protocol JKTabBarDatasource <NSObject>
 @optional
+@property (nonatomic,readonly) BOOL     tabTitleHidden;
 @property (nonatomic,readonly) UIImage  *selectedTabImage; //Overwrite this method in view controller to provide its own tab icon image.If tabBarItem is set this property will be ignored by default.
 @property (nonatomic,readonly) UIImage  *unselectedTabImage;
 @property (nonatomic,readonly) NSString *tabTitle; //Overwrite this method in view controller to provide its own tab title.If tabBarItem is set this property will be ignored by default.

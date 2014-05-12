@@ -19,5 +19,7 @@ typedef NS_ENUM(NSUInteger, JKTabBarItemType) {
 //methods below wont efficent if itemType is JKTabBarItemTypeCustomView
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
 - (void)removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
+- (void)sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event;
+- (void)sendActionsForControlEvents:(UIControlEvents)controlEvents;
 
 @end
