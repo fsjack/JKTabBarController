@@ -57,8 +57,8 @@ NS_INLINE BOOL JKTabBarIsHorizontal(JKTabBarPosition position) {
 @property (nonatomic,weak)      UIViewController *selectedViewController; // This may return the "More" navigation controller if it exists.
 @property (nonatomic)           NSUInteger selectedIndex;
 
-@property (nonatomic,readonly)  UINavigationController *moreNavigationController;
-@property (nonatomic,readonly)  JKTabBar *tabBar; // Provided for -[UIActionSheet showFromTabBar:]. Attempting to modify the contents of the tab bar directly will throw an exception.
+@property (nonatomic, readonly, strong)  UINavigationController *moreNavigationController;
+@property (nonatomic, readonly, weak)  JKTabBar *tabBar; // Provided for -[UIActionSheet showFromTabBar:]. Attempting to modify the contents of the tab bar directly will throw an exception.
 @property (nonatomic)           CGFloat tabBarBackgroundTopInset;
 
 @property (nonatomic) BOOL tabBarHidden;
