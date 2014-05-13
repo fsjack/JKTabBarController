@@ -143,7 +143,7 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     [self.backgroundImageView sizeToFit];
     self.backgroundImageView.frame = (CGRect){
         {self.backgroundImageView.frame.origin.x , self.bounds.size.height - self.backgroundImageView.frame.size.height},
-        self.backgroundImageView.bounds.size
+        { self.bounds.size.width, self.backgroundImageView.bounds.size.height }
     };
 }
 
