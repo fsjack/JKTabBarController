@@ -1,5 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JKTabBarController"
+  s.version		 = "1.0.0"
   s.summary      = "Super fixible tab bar controller."
 
   s.homepage     = "https://github.com/fsjack/JKTabBarController"
