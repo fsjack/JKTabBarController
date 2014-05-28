@@ -144,19 +144,22 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 
 - (void)setTitleTextAttributes:(NSDictionary *)attributes forState:(UIControlState)state{
     /*!Need FIX: Need to compatiable with iOS 5 and iOS 7. */    
-    [self.itemButton.titleLabel setFont:attributes[UITextAttributeFont]];
-    [self.itemButton.titleLabel setShadowOffset:[attributes[UITextAttributeTextShadowOffset] CGSizeValue]];
-    [self.itemButton setTitleColor:attributes[UITextAttributeTextColor] forState:state];
-    [self.itemButton setTitleShadowColor:attributes[UITextAttributeTextShadowColor] forState:state];
+    [self.itemButton.titleLabel setFont:attributes[NSFontAttributeName]];
+    [self.itemButton setTitleColor:attributes[NSForegroundColorAttributeName] forState:state];
+    [self.itemButton setTitleShadowColor:[attributes[NSShadowAttributeName] shadowColor] forState:state];
+    [self.itemButton.titleLabel setShadowOffset:[attributes[NSShadowAttributeName] shadowOffset]];
 }
 
 - (NSDictionary *)titleTextAttributesForState:(UIControlState)state{
-    /*!Need FIX: Need to compatiable with iOS 5 and iOS 7. */    
+    /*!Need FIX: Need to compatiable with iOS 5 and iOS 7. */
+    NSShadow *titleShadow = [[NSShadow alloc] init];
+    titleShadow.shadowColor = [self.itemButton titleShadowColorForState:state];
+    titleShadow.shadowOffset = self.itemButton.titleLabel.shadowOffset;
+    
     return @{
-             UITextAttributeFont                : self.itemButton.titleLabel.font,
-             UITextAttributeTextShadowOffset    : [NSValue valueWithCGSize:self.itemButton.titleLabel.shadowOffset],
-             UITextAttributeTextColor           : [self.itemButton titleColorForState:state],
-             UITextAttributeTextShadowColor     : [self.itemButton titleShadowColorForState:state]
+             NSFontAttributeName                : self.itemButton.titleLabel.font,
+             NSShadowAttributeName              : titleShadow,
+             NSForegroundColorAttributeName     : [self.itemButton titleColorForState:state],
              };
 }
 
@@ -329,20 +332,21 @@ static NSString * const JKTabBarItemBadgeHideAnimationKey = @"JKTabBarItemBadgeH
 #pragma mark - badge property 
 - (void)setBadgeTextAttributeds:(NSDictionary *)badgeTextAttributeds{
     /*!Need FIX: Need to compatiable with iOS 5 and iOS 7. */
-    [self.badgeButton setTitleColor:badgeTextAttributeds[UITextAttributeTextColor] forState:UIControlStateNormal];
-    [self.badgeButton setTitleShadowColor:badgeTextAttributeds[UITextAttributeTextShadowColor] forState:UIControlStateNormal];
-    [self.badgeButton.titleLabel setFont:badgeTextAttributeds[UITextAttributeFont]];
-    [self.badgeButton.titleLabel setShadowOffset:[badgeTextAttributeds[UITextAttributeTextShadowOffset] CGSizeValue]];
+    [self.badgeButton setTitleColor:badgeTextAttributeds[NSForegroundColorAttributeName] forState:UIControlStateNormal];
+    [self.badgeButton.titleLabel setFont:badgeTextAttributeds[NSFontAttributeName]];
+    [self.badgeButton setTitleShadowColor:[badgeTextAttributeds[NSShadowAttributeName] shadowColor] forState:UIControlStateNormal];
+    [self.badgeButton.titleLabel setShadowOffset:[badgeTextAttributeds[NSShadowAttributeName] shadowOffset]];
 }
 
 - (NSDictionary *)badgeTextAttributeds{
-    /*!Need FIX: Need to compatiable with iOS 5 and iOS 7. */    
-    return @{
-             UITextAttributeTextColor          : [self.badgeButton titleColorForState:UIControlStateNormal],
-             UITextAttributeTextShadowColor    : [self.badgeButton titleShadowColorForState:UIControlStateNormal],
-             UITextAttributeFont               : self.badgeButton.titleLabel.font,
-             UITextAttributeTextShadowOffset   : [NSValue valueWithCGSize:self.badgeButton.titleLabel.shadowOffset]
-             };
+    /*!Need FIX: Need to compatiable with iOS 5 and iOS 7. */
+    NSShadow *shadow = [[NSShadow alloc] init];
+    shadow.shadowColor = [self.badgeButton titleShadowColorForState:UIControlStateNormal];
+    shadow.shadowOffset = self.badgeButton.titleLabel.shadowOffset;
+    
+    return @{NSForegroundColorAttributeName    : [self.badgeButton titleColorForState:UIControlStateNormal],
+             NSFontAttributeName               : self.badgeButton.titleLabel.font,
+             NSShadowAttributeName             : shadow };
 }
 
 - (UIImage *)badgeBackgroundImage{
