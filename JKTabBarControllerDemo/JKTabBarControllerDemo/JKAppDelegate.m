@@ -20,6 +20,7 @@
     JKTabBarController *tabBarController = [[JKTabBarController alloc] init];
     self.tabBarController = tabBarController;
     tabBarController.selectedControllerNavigationItem = YES;
+//    tabBarController.shouldAdjustSelectedViewContentInsets = YES;
     
     UIViewController *redViewController = [[JKViewController alloc] initWithNibName:@"JKViewController" bundle:nil];
     redViewController.tabBarItem_jk = [[JKTabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"home_tab_icon_1"]];

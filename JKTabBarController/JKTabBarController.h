@@ -68,6 +68,7 @@ NS_INLINE BOOL JKTabBarIsHorizontal(JKTabBarPosition position) {
 @property (nonatomic,weak)      id<JKTabBarControllerDelegate> delegate;
 
 @property (nonatomic) BOOL selectedControllerNavigationItem; //NO by default.Set YES could let navigation controller of tabbar controller show selected controller's navigation item.
+@property (nonatomic) BOOL shouldAdjustSelectedViewContentInsets; //Default is NO.
 
 @end
 

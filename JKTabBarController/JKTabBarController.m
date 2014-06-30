@@ -107,6 +107,15 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     return item;
 }
 
+- (UIView *)traverseSubviewsToGetViewOfClass:(Class)viewClass inView:(UIView *)view{
+    if(!view) return nil;
+    
+    if([view isKindOfClass:[viewClass class]])
+        return view;
+    else
+        return [self traverseSubviewsToGetViewOfClass:viewClass inView:view.subviews.firstObject];
+}
+
 - (void)_selectTabBarItem:(JKTabBarItem *)tabBarItem{
     UIViewController *viewController = [self _viewControllerForTabBarItem:tabBarItem];
     
@@ -124,6 +133,13 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     
     self.selectedViewController = viewController;
     _selectedIndex = [self.tabBar.items indexOfObject:tabBarItem];
+    
+    if(self.shouldAdjustSelectedViewContentInsets) {
+        UIScrollView *toppestScrollView = (UIScrollView *)[self traverseSubviewsToGetViewOfClass:[UIScrollView class] inView:viewController.view];
+        UIEdgeInsets scrollViewContentInsets = (UIEdgeInsets)toppestScrollView.contentInset;
+        scrollViewContentInsets.bottom = CGRectGetHeight(self.tabBar.bounds);
+        toppestScrollView.contentInset = scrollViewContentInsets;
+    }
 }
 
 #pragma mark - Property Methods
@@ -158,13 +174,22 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     CGRect viewBounds = self.view.bounds;
     CGRect containerViewFrame = self.containerView.frame;
     
-    if(hidden){
-        tabBarFrame.origin.y = viewBounds.size.height;
+    if(self.shouldAdjustSelectedViewContentInsets) {
+        if(hidden){
+            tabBarFrame.origin.y = viewBounds.size.height;
+        }else{
+            tabBarFrame.origin.y = viewBounds.size.height - JKTabBarDefaultHeight;
+        }
         containerViewFrame = viewBounds;
-        containerViewFrame.size.height += self.tabBarBackgroundTopInset;
-    }else{
-        tabBarFrame.origin.y = viewBounds.size.height - JKTabBarDefaultHeight;
-        containerViewFrame.size.height = viewBounds.size.height - JKTabBarDefaultHeight + self.tabBarBackgroundTopInset;
+    } else {
+        if(hidden){
+            tabBarFrame.origin.y = viewBounds.size.height;
+            containerViewFrame = viewBounds;
+            containerViewFrame.size.height += self.tabBarBackgroundTopInset;
+        }else{
+            tabBarFrame.origin.y = viewBounds.size.height - JKTabBarDefaultHeight;
+            containerViewFrame.size.height = viewBounds.size.height - JKTabBarDefaultHeight + self.tabBarBackgroundTopInset;
+        }
     }
     
     
@@ -203,11 +228,14 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
             tabBarAutoResizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
             break;
     }
-    
+
     CGRectDivide(self.view.bounds, &tabBarFrame, &containerViewFrame, self.tabBarHeight , rectEdge);
     self.tabBar.frame = tabBarFrame;
-    
-    containerViewFrame.size.height = containerViewFrame.size.height + self.tabBarBackgroundTopInset;
+    if(self.shouldAdjustSelectedViewContentInsets) {
+        containerViewFrame = self.view.bounds;
+    } else {
+        containerViewFrame.size.height = containerViewFrame.size.height + self.tabBarBackgroundTopInset;
+    }
     self.containerView.frame = containerViewFrame;
     
     self.containerView.autoresizingMask  = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -255,6 +283,11 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 - (void)setTabBarBackgroundTopInset:(CGFloat)tabBarBackgroundTopInset{
     _tabBarBackgroundTopInset = tabBarBackgroundTopInset;
     [self setTabBarPosition:self.tabBarPosition];    
+}
+
+- (void)setShouldAdjustSelectedViewContentInsets:(BOOL)shouldAdjustSelectedViewContentInsets {
+    _shouldAdjustSelectedViewContentInsets = shouldAdjustSelectedViewContentInsets;
+    [self setTabBarPosition:self.tabBarPosition];
 }
 
 #pragma mark - Initialition
