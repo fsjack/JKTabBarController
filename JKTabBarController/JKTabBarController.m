@@ -129,10 +129,6 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     [self.containerView addSubview:viewController.view];
     viewController.view.frame = self.containerView.bounds;
     viewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [viewController didMoveToParentViewController:self];
-    
-    self.selectedViewController = viewController;
-    _selectedIndex = [self.tabBar.items indexOfObject:tabBarItem];
     
     if(self.shouldAdjustSelectedViewContentInsets) {
         UIScrollView *toppestScrollView = (UIScrollView *)[self traverseSubviewsToGetViewOfClass:[UIScrollView class] inView:viewController.view];
@@ -140,6 +136,11 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
         scrollViewContentInsets.bottom = CGRectGetHeight(self.tabBar.bounds);
         toppestScrollView.contentInset = scrollViewContentInsets;
     }
+    
+    [viewController didMoveToParentViewController:self];
+    
+    self.selectedViewController = viewController;
+    _selectedIndex = [self.tabBar.items indexOfObject:tabBarItem];
 }
 
 #pragma mark - Property Methods
