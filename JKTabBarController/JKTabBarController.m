@@ -132,9 +132,11 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     
     if(self.shouldAdjustSelectedViewContentInsets) {
         UIScrollView *toppestScrollView = (UIScrollView *)[self traverseSubviewsToGetViewOfClass:[UIScrollView class] inView:viewController.view];
-        UIEdgeInsets scrollViewContentInsets = (UIEdgeInsets)toppestScrollView.contentInset;
-        scrollViewContentInsets.bottom = CGRectGetHeight(self.tabBar.bounds);
-        toppestScrollView.contentInset = scrollViewContentInsets;
+        if(toppestScrollView.contentInset.bottom == 0.0f) { //Won't adjust scrollView contentInsets if scrollview contentInset have already set.
+            UIEdgeInsets scrollViewContentInsets = (UIEdgeInsets)toppestScrollView.contentInset;
+            scrollViewContentInsets.bottom = CGRectGetHeight(self.tabBar.bounds);
+            toppestScrollView.contentInset = scrollViewContentInsets;
+        }
     }
     
     [viewController didMoveToParentViewController:self];

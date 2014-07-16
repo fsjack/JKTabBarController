@@ -278,8 +278,7 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
         [badgeButton.titleLabel setFont:[UIFont systemFontOfSize:10]];
         badgeButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
         [badgeButton setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-        [badgeButton setAdjustsImageWhenDisabled:NO];
-        [badgeButton setEnabled:NO];
+        [badgeButton setUserInteractionEnabled:NO];
         [badgeButton setContentEdgeInsets:UIEdgeInsetsMake(0, 11, 0, 10)];
     }
     return _badgeButton;
