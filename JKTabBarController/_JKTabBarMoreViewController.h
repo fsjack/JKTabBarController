@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 @class JKTabBarController;
 @interface _JKTabBarMoreViewController : UITableViewController
-@property (nonatomic,weak) JKTabBarController *tabBarController;
+@property (nonatomic,unsafe_unretained) JKTabBarController *tabBarController;
 @end
