@@ -2,35 +2,37 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>62EF5096-3952-4067-B2EA-75C7828B3799</string>
 	<key>IDESourceControlProjectName</key>
 	<string>JKTabBarControllerDemo</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>03F6E46A-8B94-4C6E-AE6D-96D3F80E2037</key>
-		<string>https://github.com/fsjack/JKTabBarController.git</string>
+		<key>E7790C37D42B0562E335074E25B326DACA8B8839</key>
+		<string>https://github.com/YuAo/JKTabBarController.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>JKTabBarControllerDemo/JKTabBarControllerDemo.xcodeproj/project.xcworkspace</string>
+	<string>JKTabBarControllerDemo/JKTabBarControllerDemo.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>03F6E46A-8B94-4C6E-AE6D-96D3F80E2037</key>
+		<key>E7790C37D42B0562E335074E25B326DACA8B8839</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/fsjack/JKTabBarController.git</string>
+	<string>https://github.com/YuAo/JKTabBarController.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>03F6E46A-8B94-4C6E-AE6D-96D3F80E2037</string>
+	<string>E7790C37D42B0562E335074E25B326DACA8B8839</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>03F6E46A-8B94-4C6E-AE6D-96D3F80E2037</string>
+			<string>E7790C37D42B0562E335074E25B326DACA8B8839</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JKTabBarController</string>
 		</dict>
