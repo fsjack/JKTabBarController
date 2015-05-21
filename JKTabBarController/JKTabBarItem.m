@@ -51,7 +51,7 @@ static CGSize const JKTabBarBadgeViewMinmumSize = (CGSize){ 32.0f , 32.0f };
 }
 
 - (CGRect)titleRectForContentRect:(CGRect)contentRect{
-    CGRect titleRect = [super titleRectForContentRect:contentRect];
+    CGRect titleRect = [super titleRectForContentRect:CGRectInset(contentRect, -CGRectGetWidth(contentRect), 0)];
     CGRect imageRect = [self imageRectForContentRect:contentRect];
     
     UIEdgeInsets titleInsets = self.titleEdgeInsets;
