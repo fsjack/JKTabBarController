@@ -28,7 +28,6 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 @property (nonatomic,strong) JKTabBarItem                *moreTabBarItem;
 @property (nonatomic,weak)   UIView                      *containerView;
 @property (nonatomic,weak)   JKTabBar                    *tabBar;
-@property (nonatomic,readonly) CGFloat                   tabBarHeight;
 @end
 
 @implementation JKTabBarController
@@ -149,15 +148,15 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 }
 
 #pragma mark - Property Methods
-- (BOOL) isTabBarHidden{
+- (BOOL)isTabBarHidden{
     CGRect viewBounds = self.view.bounds;
     CGRect tabBarFrame = self.tabBar.frame;
     
     switch (self.tabBarPosition) {
         case JKTabBarPositionTop:
-            return (tabBarFrame.origin.y == -JKTabBarDefaultHeight);
+            return (tabBarFrame.origin.y == -[self.class tabBarHeight]);
         case JKTabBarPositionLeft:
-            return (tabBarFrame.origin.x == -JKTabBarDefaultHeight);
+            return (tabBarFrame.origin.x == -[self.class tabBarHeight]);
         case JKTabBarPositionRight:
             return (tabBarFrame.origin.x == viewBounds.size.width);
         default:
@@ -165,7 +164,7 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     }
 }
 
-- (CGFloat)tabBarHeight{
++ (CGFloat)tabBarHeight {
     return JKTabBarDefaultHeight;
 }
 
@@ -184,7 +183,7 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
         if(hidden){
             tabBarFrame.origin.y = viewBounds.size.height;
         }else{
-            tabBarFrame.origin.y = viewBounds.size.height - JKTabBarDefaultHeight;
+            tabBarFrame.origin.y = viewBounds.size.height - [self.class tabBarHeight];
         }
         containerViewFrame = viewBounds;
     } else {
@@ -193,8 +192,8 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
             containerViewFrame = viewBounds;
             containerViewFrame.size.height += self.tabBarBackgroundTopInset;
         }else{
-            tabBarFrame.origin.y = viewBounds.size.height - JKTabBarDefaultHeight;
-            containerViewFrame.size.height = viewBounds.size.height - JKTabBarDefaultHeight + self.tabBarBackgroundTopInset;
+            tabBarFrame.origin.y = viewBounds.size.height - [self.class tabBarHeight];
+            containerViewFrame.size.height = viewBounds.size.height - [self.class tabBarHeight] + self.tabBarBackgroundTopInset;
         }
     }
     
@@ -235,7 +234,7 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
             break;
     }
 
-    CGRectDivide(self.view.bounds, &tabBarFrame, &containerViewFrame, self.tabBarHeight , rectEdge);
+    CGRectDivide(self.view.bounds, &tabBarFrame, &containerViewFrame, self.class.tabBarHeight , rectEdge);
     self.tabBar.frame = tabBarFrame;
     if(self.shouldAdjustSelectedViewContentInsets) {
         containerViewFrame = self.view.bounds;

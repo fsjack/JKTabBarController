@@ -20,11 +20,6 @@
 		8C2A186D17618D4E0094525A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C2A186C17618D4E0094525A /* Default-568h@2x.png */; };
 		8C2A187017618D4E0094525A /* JKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A186F17618D4E0094525A /* JKViewController.m */; };
 		8C2A187317618D4E0094525A /* JKViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8C2A187117618D4E0094525A /* JKViewController.xib */; };
-		8C2A187B17618D4E0094525A /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2A187A17618D4E0094525A /* SenTestingKit.framework */; };
-		8C2A187C17618D4E0094525A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2A185617618D4E0094525A /* UIKit.framework */; };
-		8C2A187D17618D4E0094525A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2A185817618D4E0094525A /* Foundation.framework */; };
-		8C2A188517618D4E0094525A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8C2A188317618D4E0094525A /* InfoPlist.strings */; };
-		8C2A188817618D4E0094525A /* JKTabBarControllerDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A188717618D4E0094525A /* JKTabBarControllerDemoTests.m */; };
 		8C2A189417618D8F0094525A /* JKTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A189317618D8F0094525A /* JKTabBarController.m */; };
 		8C2A189717618DA30094525A /* JKTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A189617618DA30094525A /* JKTabBar.m */; };
 		8C2A189A17618DBD0094525A /* JKTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A189917618DBD0094525A /* JKTabBarItem.m */; };
@@ -49,16 +44,6 @@
 		8CBD61EE176EEE4100FE7920 /* _JKAppearanceProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBD61ED176EEE4100FE7920 /* _JKAppearanceProxy.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		8C2A187E17618D4E0094525A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8C2A184B17618D4E0094525A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8C2A185217618D4E0094525A;
-			remoteInfo = JKTabBarControllerDemo;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		8C05855F1770001A00373848 /* _JKTabBarMoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _JKTabBarMoreViewController.h; sourceTree = "<group>"; };
 		8C0585601770001A00373848 /* _JKTabBarMoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _JKTabBarMoreViewController.m; sourceTree = "<group>"; };
@@ -80,12 +65,7 @@
 		8C2A186E17618D4E0094525A /* JKViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKViewController.h; sourceTree = "<group>"; };
 		8C2A186F17618D4E0094525A /* JKViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKViewController.m; sourceTree = "<group>"; };
 		8C2A187217618D4E0094525A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JKViewController.xib; sourceTree = "<group>"; };
-		8C2A187917618D4E0094525A /* JKTabBarControllerDemoTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JKTabBarControllerDemoTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C2A187A17618D4E0094525A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		8C2A188217618D4E0094525A /* JKTabBarControllerDemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "JKTabBarControllerDemoTests-Info.plist"; sourceTree = "<group>"; };
-		8C2A188417618D4E0094525A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		8C2A188617618D4E0094525A /* JKTabBarControllerDemoTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JKTabBarControllerDemoTests.h; sourceTree = "<group>"; };
-		8C2A188717618D4E0094525A /* JKTabBarControllerDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKTabBarControllerDemoTests.m; sourceTree = "<group>"; };
 		8C2A189217618D8F0094525A /* JKTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKTabBarController.h; sourceTree = "<group>"; };
 		8C2A189317618D8F0094525A /* JKTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKTabBarController.m; sourceTree = "<group>"; };
 		8C2A189517618DA30094525A /* JKTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKTabBar.h; sourceTree = "<group>"; };
@@ -128,16 +108,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8C2A187517618D4E0094525A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8C2A187B17618D4E0094525A /* SenTestingKit.framework in Frameworks */,
-				8C2A187C17618D4E0094525A /* UIKit.framework in Frameworks */,
-				8C2A187D17618D4E0094525A /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -146,7 +116,6 @@
 			children = (
 				8C33F66A176CE6F100E1AEC7 /* README.md */,
 				8C2A185C17618D4E0094525A /* JKTabBarControllerDemo */,
-				8C2A188017618D4E0094525A /* JKTabBarControllerDemoTests */,
 				8C2A185517618D4E0094525A /* Frameworks */,
 				8C2A185417618D4E0094525A /* Products */,
 			);
@@ -156,7 +125,6 @@
 			isa = PBXGroup;
 			children = (
 				8C2A185317618D4E0094525A /* JKTabBarControllerDemo.app */,
-				8C2A187917618D4E0094525A /* JKTabBarControllerDemoTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -198,25 +166,6 @@
 				8C2A186817618D4E0094525A /* Default.png */,
 				8C2A186A17618D4E0094525A /* Default@2x.png */,
 				8C2A186C17618D4E0094525A /* Default-568h@2x.png */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		8C2A188017618D4E0094525A /* JKTabBarControllerDemoTests */ = {
-			isa = PBXGroup;
-			children = (
-				8C2A188617618D4E0094525A /* JKTabBarControllerDemoTests.h */,
-				8C2A188717618D4E0094525A /* JKTabBarControllerDemoTests.m */,
-				8C2A188117618D4E0094525A /* Supporting Files */,
-			);
-			path = JKTabBarControllerDemoTests;
-			sourceTree = "<group>";
-		};
-		8C2A188117618D4E0094525A /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				8C2A188217618D4E0094525A /* JKTabBarControllerDemoTests-Info.plist */,
-				8C2A188317618D4E0094525A /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -286,25 +235,6 @@
 			productReference = 8C2A185317618D4E0094525A /* JKTabBarControllerDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		8C2A187817618D4E0094525A /* JKTabBarControllerDemoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 8C2A188E17618D4E0094525A /* Build configuration list for PBXNativeTarget "JKTabBarControllerDemoTests" */;
-			buildPhases = (
-				8C2A187417618D4E0094525A /* Sources */,
-				8C2A187517618D4E0094525A /* Frameworks */,
-				8C2A187617618D4E0094525A /* Resources */,
-				8C2A187717618D4E0094525A /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				8C2A187F17618D4E0094525A /* PBXTargetDependency */,
-			);
-			name = JKTabBarControllerDemoTests;
-			productName = JKTabBarControllerDemoTests;
-			productReference = 8C2A187917618D4E0094525A /* JKTabBarControllerDemoTests.octest */;
-			productType = "com.apple.product-type.bundle";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -328,7 +258,6 @@
 			projectRoot = "";
 			targets = (
 				8C2A185217618D4E0094525A /* JKTabBarControllerDemo */,
-				8C2A187817618D4E0094525A /* JKTabBarControllerDemoTests */,
 			);
 		};
 /* End PBXProject section */
@@ -363,31 +292,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8C2A187617618D4E0094525A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8C2A188517618D4E0094525A /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		8C2A187717618D4E0094525A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8C2A184F17618D4E0094525A /* Sources */ = {
@@ -406,23 +311,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8C2A187417618D4E0094525A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8C2A188817618D4E0094525A /* JKTabBarControllerDemoTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		8C2A187F17618D4E0094525A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8C2A185217618D4E0094525A /* JKTabBarControllerDemo */;
-			targetProxy = 8C2A187E17618D4E0094525A /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		8C2A185F17618D4E0094525A /* InfoPlist.strings */ = {
@@ -439,14 +328,6 @@
 				8C2A187217618D4E0094525A /* en */,
 			);
 			name = JKViewController.xib;
-			sourceTree = "<group>";
-		};
-		8C2A188317618D4E0094525A /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8C2A188417618D4E0094525A /* en */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -477,7 +358,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -501,7 +382,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -532,40 +413,6 @@
 			};
 			name = Release;
 		};
-		8C2A188F17618D4E0094525A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/JKTabBarControllerDemo.app/JKTabBarControllerDemo";
-				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "JKTabBarControllerDemo/JKTabBarControllerDemo-Prefix.pch";
-				INFOPLIST_FILE = "JKTabBarControllerDemoTests/JKTabBarControllerDemoTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Debug;
-		};
-		8C2A189017618D4E0094525A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/JKTabBarControllerDemo.app/JKTabBarControllerDemo";
-				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "JKTabBarControllerDemo/JKTabBarControllerDemo-Prefix.pch";
-				INFOPLIST_FILE = "JKTabBarControllerDemoTests/JKTabBarControllerDemoTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -583,15 +430,6 @@
 			buildConfigurations = (
 				8C2A188C17618D4E0094525A /* Debug */,
 				8C2A188D17618D4E0094525A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		8C2A188E17618D4E0094525A /* Build configuration list for PBXNativeTarget "JKTabBarControllerDemoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8C2A188F17618D4E0094525A /* Debug */,
-				8C2A189017618D4E0094525A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
