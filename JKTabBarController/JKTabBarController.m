@@ -41,6 +41,9 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 
 #pragma mark - Private Methods
 - (void)_setupAppearence{
+    [self.tabBar removeFromSuperview];
+    [self.containerView removeFromSuperview];
+    
     JKTabBar *tabBar        = [[JKTabBar alloc] initWithFrame:CGRectZero];
     self.tabBar             = tabBar;
     tabBar.delegate         = self;
@@ -233,7 +236,7 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
             tabBarAutoResizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
             break;
     }
-
+    
     CGRectDivide(self.view.bounds, &tabBarFrame, &containerViewFrame, self.class.tabBarHeight , rectEdge);
     self.tabBar.frame = tabBarFrame;
     if(self.shouldAdjustSelectedViewContentInsets) {
@@ -287,7 +290,7 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 
 - (void)setTabBarBackgroundTopInset:(CGFloat)tabBarBackgroundTopInset{
     _tabBarBackgroundTopInset = tabBarBackgroundTopInset;
-    [self setTabBarPosition:self.tabBarPosition];    
+    [self setTabBarPosition:self.tabBarPosition];
 }
 
 - (void)setShouldAdjustSelectedViewContentInsets:(BOOL)shouldAdjustSelectedViewContentInsets {
@@ -296,9 +299,16 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 }
 
 #pragma mark - Initialition
-- (id)init{
-    self = [super init];
-    if(self){
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        [self _setupAppearence];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
         [self _setupAppearence];
     }
     return self;
