@@ -200,16 +200,16 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
         }
     }
     
-    
-    [UIView animateWithDuration:animated ? 0.2 : 0
+    self.tabBar.userInteractionEnabled = NO;
+    [UIView animateWithDuration:animated ? UINavigationControllerHideShowBarDuration : 0
                           delay:0
-                        options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent
+                        options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction
                      animations:^{
-                         
                          self.tabBar.frame = tabBarFrame;
                          self.containerView.frame = containerViewFrame;
-                         
-                     } completion:nil];
+                     } completion:^(BOOL finished) {
+                         self.tabBar.userInteractionEnabled = YES;
+                     }];
 }
 
 - (void)setTabBarPosition:(JKTabBarPosition)tabBarPosition{
