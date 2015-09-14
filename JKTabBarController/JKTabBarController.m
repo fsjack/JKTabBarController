@@ -59,7 +59,13 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 }
 
 - (UIViewController *)_viewControllerForTabBarItem:(JKTabBarItem *)item{
-    if(item == self.moreTabBarItem) return self.moreNavigationController;
+    if (item == nil) {
+        return nil;
+    }
+    
+    if(item == self.moreTabBarItem) {
+        return self.moreNavigationController;
+    }
     
     NSArray *fileterViewControllers = [self.viewControllers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(UIViewController *evaluatedObject, NSDictionary *bindings) {
         if(evaluatedObject.tabBarItem_jk == item)
@@ -264,14 +270,6 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
     return _moreNavigationController;
 }
 
-- (JKTabBarItem *)moreTabBarItem{
-    if(!_moreTabBarItem){
-        JKTabBarItem *item = [self _tabBarItemsForViewController:self.moreNavigationController];
-        _moreTabBarItem = item;
-    }
-    return _moreTabBarItem;
-}
-
 - (void)setSelectedIndex:(NSUInteger)selectedIndex{
     if(_selectedIndex == selectedIndex) return;
     if(selectedIndex > self.tabBar.items.count-1){
@@ -343,7 +341,8 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
         if(idx == JKTabBarMaximumItemCount-1 && self.shouldShowMore){
             /* add 'more' tab bar item if index is out of maximum count */
             *stop = YES;
-            item = self.moreTabBarItem;
+            item = [self _tabBarItemsForViewController:self.moreNavigationController];
+            self.moreTabBarItem = item;
         }else{
             item = [self _tabBarItemsForViewController:rootViewController];
         }
