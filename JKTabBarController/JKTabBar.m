@@ -114,6 +114,13 @@ CGFloat const JKTabBarSelectionIndicatorAnimationDuration = 0.3f;
     UIButton *button = sender;
     JKTabBarItem *item = [self tabBarItemForItemButton:sender];
     
+    if ([self.delegate respondsToSelector:@selector(tabBar:shouldSelectItem:)]) {
+        BOOL shouldSelected = [self.delegate tabBar:self shouldSelectItem:item];
+        if (!shouldSelected) {
+            return;
+        }
+    }
+    
     UIButton *selectedButton = (UIButton *)self.selectedItem.contentView;
     
     [item setEnabled:!item.isEnabled];

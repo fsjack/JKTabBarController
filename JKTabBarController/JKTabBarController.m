@@ -347,10 +347,6 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
             item = [self _tabBarItemsForViewController:rootViewController];
         }
         [items addObject:item];
-        
-        if([self.delegate respondsToSelector:@selector(tabBarController:shouldSelectViewController:)]){
-            item.enabled = [self.delegate tabBarController:self shouldSelectViewController:rootViewController];
-        }
     }];
     self.tabBar.items = items;
     
@@ -359,6 +355,15 @@ NSUInteger const JKTabBarMaximumItemCount = 5;
 }
 
 #pragma mark - JKTabBarDelegate
+
+- (BOOL)tabBar:(JKTabBar *)tabBar shouldSelectItem:(JKTabBarItem *)item {
+    if([self.delegate respondsToSelector:@selector(tabBarController:shouldSelectViewController:)]){
+        return [self.delegate tabBarController:self
+                    shouldSelectViewController:[self _viewControllerForTabBarItem:item]];
+    }
+    return YES;
+}
+
 - (void)tabBar:(JKTabBar *)tabBar didSelectItem:(JKTabBarItem *)item{
     
     if([self.delegate respondsToSelector:@selector(tabBarController:willSelectViewController:)])

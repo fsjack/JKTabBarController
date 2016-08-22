@@ -55,6 +55,7 @@ extern CGFloat const JKTabBarSelectionIndicatorAnimationDuration;
 @protocol JKTabBarDelegate<NSObject>
 @optional
 
+- (BOOL)tabBar:(JKTabBar *)tabBar shouldSelectItem:(JKTabBarItem *)item;
 - (void)tabBar:(JKTabBar *)tabBar didSelectItem:(JKTabBarItem *)item; // called when a new view is selected by the user (but not programatically)
 
 /* called when user shows or dismisses customize sheet. you can use the 'willEnd' to set up what appears underneath.
